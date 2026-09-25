@@ -148,7 +148,7 @@ class _MainAppState extends State<MainApp> {
                 title: const Text(
                   'Elixir Corp',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(228, 222, 222, 1),
                   ),
