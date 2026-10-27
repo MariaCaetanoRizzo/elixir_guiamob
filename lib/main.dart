@@ -1,106 +1,15 @@
-// Decodificação do arquivo JSON que contém os dados do elenco.
-import 'dart:convert';
-
 // Widgets e componentes visuais usados nas telas do aplicativo.
 import 'package:flutter/material.dart';
-// Acesso aos assets empacotados, como o JSON e as imagens locais.
-import 'package:flutter/services.dart';
 
-/// Modelo imutável que representa um personagem carregado do arquivo JSON.
-class Personagem {
-  /// Cria um personagem com todos os dados fornecidos pelo arquivo.
-  const Personagem({
-    required this.id,
-    required this.nome,
-    required this.descricao,
-    required this.principal,
-    required this.imagem,
-  });
-
-  final int id; // Identificador único do personagem no elenco.
-  final String nome; // Nome exibido nas páginas e no carrossel.
-  final String descricao; // Texto descritivo exibido junto ao nome.
-  final bool principal; // Indica se o personagem pertence ao núcleo principal.
-  final String imagem; // Caminho local ou endereço remoto da imagem.
-
-  /// Converte um registro JSON em um objeto usado pela interface Flutter.
-  factory Personagem.fromJson(Map<String, dynamic> json) {
-    return Personagem(
-      id: json['id'] as int,
-      nome: json['nome'] as String,
-      descricao: json['descricao'] as String,
-      principal: json['principal'] as bool,
-      imagem: json['imagem'] as String? ?? '',
-    );
-  }
-}
-
-// Cache da leitura para que a tela inicial e a página de elenco compartilhem
-// a mesma operação assíncrona e os mesmos dados carregados.
-Future<List<Personagem>>? _personagensEmCarregamento;
-
-/// Lê o JSON do bundle, converte cada registro e limita o elenco a 16 itens.
-Future<List<Personagem>> carregarPersonagens() {
-  return _personagensEmCarregamento ??= rootBundle
-      .loadString('json/arquivo.json')
-      .then((conteudo) {
-        // Decodifica a lista dinâmica e transforma cada mapa no modelo tipado.
-        final dados = jsonDecode(conteudo) as List<dynamic>;
-        return dados
-            .map((item) => Personagem.fromJson(item as Map<String, dynamic>))
-            .take(16)
-            .toList();
-      });
-}
-
-/// Modelo tipado do conteúdo apresentado na página Projeto.
-class Projeto {
-  const Projeto({
-    required this.titulo,
-    required this.imagem,
-    required this.texto,
-    required this.itens,
-  });
-
-  final String titulo;
-  final String imagem;
-  final String texto;
-  final List<String> itens;
-
-  factory Projeto.fromJson(Map<String, dynamic> json) {
-    return Projeto(
-      titulo: json['titulo'] as String,
-      imagem: json['imagem'] as String,
-      texto: json['texto'] as String,
-      itens: List<String>.from(json['itens'] as List<dynamic>),
-    );
-  }
-}
-
-Future<Projeto>? _projetoEmCarregamento;
-
-/// Carrega do bundle o conteúdo que alimenta a página Projeto.
-Future<Projeto> carregarProjeto() {
-  return _projetoEmCarregamento ??= rootBundle
-      .loadString('json/projeto.json')
-      .then((conteudo) {
-        final dados = jsonDecode(conteudo) as Map<String, dynamic>;
-        return Projeto.fromJson(dados);
-      });
-}
-
-// Ponto de entrada: cria a árvore de widgets e inicia o aplicativo Flutter.
 void main() {
   runApp(const MainApp());
 }
 
-// Cores compartilhadas para manter a identidade visual consistente nas telas.
 const roxoElixir = Color(0xFF6A1B9A);
 const roxoBotao = Color(0xFF9B59B6);
 const roxoEscuro = Color(0xFF35104F);
 const roxoClaro = Color(0xFFF3E8FA);
 
-/// Widget raiz com estado para controlar rolagem, navegação e carrossel.
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
@@ -109,27 +18,74 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  // Controladores da rolagem da página inicial e do carrossel de personagens.
   final ScrollController _scrollController = ScrollController();
   final PageController _pageController = PageController();
-  // Permite navegar para as páginas mantendo uma única pilha de rotas.
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  // A mesma carga de personagens é usada no carrossel e em outras páginas.
-  final Future<List<Personagem>> _personagensFuture = carregarPersonagens();
   // Índice atual usado para exibir a posição no carrossel.
   int _indicePersonagemAtual = 0;
 
-  // Chaves que identificam as seções da página inicial para navegação/rolagem.
+  // Chaves usadas para a rolagem automática entre seções.
   final GlobalKey _secaoHistoriaKey = GlobalKey();
   final GlobalKey _secaoElencoKey = GlobalKey();
   final GlobalKey _secaoCuriosidadesKey = GlobalKey();
   final GlobalKey _secaoRapazesKey = GlobalKey();
 
-  // Avança uma posição ou volta ao primeiro personagem ao chegar ao fim.
-  Future<void> _proximoPersonagem() async {
-    // Aguarda o carregamento para conhecer o tamanho total do elenco.
-    final personagens = await _personagensFuture;
-    if (_indicePersonagemAtual < personagens.length - 1) {
+  // Dados dos 8 personagens para o carrossel animado
+  final List<Map<String, dynamic>> _elencoDados = [
+    {
+      'nome': 'Nick Szalinski',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Personagem principal',
+    },
+    {
+      'nome': 'Amy Szalinski',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Líder do grupo',
+    },
+    {
+      'nome': 'Ron Thompson',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Aventureiro',
+    },
+    {
+      'nome': 'Russ Thompson',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Companheiro do grupo',
+    },
+    {
+      'nome': 'Wayne Szalinski',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Inventor',
+    },
+    {
+      'nome': 'Diane Szalinski',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Mãe da família',
+    },
+    {
+      'nome': 'Quark',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Cachorro da família',
+    },
+    {
+      'nome': 'Antie',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Aliada da aventura',
+    },
+    {
+      'nome': 'O Escorpião',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Ameaça do quintal',
+    },
+    {
+      'nome': 'A Abelha',
+      'imagem': 'img/logoelixir.png',
+      'ator': 'Perigo do quintal',
+    },
+  ];
+
+  void _proximoPersonagem() {
+    if (_indicePersonagemAtual < _elencoDados.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
@@ -143,9 +99,7 @@ class _MainAppState extends State<MainApp> {
     }
   }
 
-  // Volta uma posição ou salta para o último personagem no início da lista.
-  Future<void> _personagemAnterior() async {
-    final personagens = await _personagensFuture;
+  void _personagemAnterior() {
     if (_indicePersonagemAtual > 0) {
       _pageController.previousPage(
         duration: const Duration(milliseconds: 400),
@@ -153,107 +107,24 @@ class _MainAppState extends State<MainApp> {
       );
     } else {
       _pageController.animateToPage(
-        personagens.length - 1,
+        _elencoDados.length - 1,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
     }
   }
 
-  // Abre uma página como nova rota, preservando a tela anterior na pilha.
   void _navegarParaPagina(Widget pagina) {
     _navigatorKey.currentState?.push(
       MaterialPageRoute(builder: (context) => pagina),
     );
   }
 
-  // Monta o carrossel e trata os estados de erro, carregamento e sucesso.
-  Widget _construirCarrosselPersonagens() {
-    return FutureBuilder<List<Personagem>>(
-      future: _personagensFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Não foi possível carregar os personagens.');
-        }
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        // Com os dados disponíveis, cria controles e páginas do carrossel.
-        final personagens = snapshot.data!;
-        return Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    size: 25,
-                    color: Colors.white,
-                  ),
-                  onPressed: _personagemAnterior,
-                ),
-                Expanded(
-                  child: SizedBox(
-                    height: 280,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: personagens.length,
-                      onPageChanged: (index) {
-                        // Sincroniza o contador com a página selecionada.
-                        setState(() {
-                          _indicePersonagemAtual = index;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        // Cada página mostra a imagem e o nome do personagem.
-                        final personagem = personagens[index];
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            construirCardImagem(personagem.imagem),
-                            const SizedBox(height: 12),
-                            Text(
-                              personagem.nome,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 25,
-                    color: Colors.white,
-                  ),
-                  onPressed: _proximoPersonagem,
-                ),
-              ],
-            ),
-            Center(
-              child: Text(
-                '${_indicePersonagemAtual + 1} de ${personagens.length}',
-                style: const TextStyle(fontSize: 12, color: Colors.white60),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   // Libera recursos associados aos controladores quando a tela é removida.
   @override
   void dispose() {
+    // Libera os recursos dos controladores ao encerrar o estado do app para evitar
+    // vazamentos de memória e comportamento inconsistentes.
     _scrollController.dispose();
     _pageController.dispose();
     super.dispose();
@@ -261,22 +132,25 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Configura tema, navegação global e a página principal do aplicativo.
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: roxoElixir),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 133, 64, 175),
+        ),
         scaffoldBackgroundColor: roxoClaro,
         useMaterial3: true,
       ),
       home: Container(
-        color: Colors.grey,
+        // Fundo roxo translúcido que clareia a área externa ao conteúdo.
+        color: const Color.fromARGB(255, 136, 73, 175).withValues(alpha: 0.14),
         child: Center(
           child: SizedBox(
             width: 450,
             child: Scaffold(
               backgroundColor: roxoClaro,
+              // Cabeçalho fixo com título e atalhos para as páginas do aplicativo.
               appBar: AppBar(
                 backgroundColor: roxoEscuro,
                 centerTitle: true,
@@ -346,7 +220,6 @@ class _MainAppState extends State<MainApp> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    // Agrupa o conteúdo da página inicial em um painel visual.
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 15),
                       padding: const EdgeInsets.all(20),
@@ -364,14 +237,13 @@ class _MainAppState extends State<MainApp> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Imagem de marca com camada escura e logotipo central.
                           Stack(
                             alignment: Alignment.center,
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(16.0),
                                 child: Image.asset(
-                                  'img/logoelixir.png',
+                                  'img/fundobranco.jpg',
                                   width: double.infinity,
                                   height: 200,
                                   fit: BoxFit.cover,
@@ -393,7 +265,7 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 25),
 
-                          // Resumo da história com acesso à página completa.
+                          // Seção História
                           Column(
                             key: _secaoHistoriaKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,11 +280,11 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // Imagem ilustrativa da seção de história.
+                              // --- SUBSTITUÍDO O CONTEÚDO PELA IMAGEM EXATA ---
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
-                                  'img/logoelixir.png',
+                                  'img/fundonovo.jpg',
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -447,7 +319,7 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 30),
 
-                          // Carrossel resumido com acesso ao elenco completo.
+                          // Seção Elenco
                           Column(
                             key: _secaoElencoKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,12 +333,80 @@ class _MainAppState extends State<MainApp> {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              _construirCarrosselPersonagens(),
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.arrow_back_ios,
+                                        size: 25,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: _personagemAnterior,
+                                    ),
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: 280,
+                                        child: PageView.builder(
+                                          controller: _pageController,
+                                          itemCount: _elencoDados.length,
+                                          onPageChanged: (index) {
+                                            setState(() {
+                                              _indicePersonagemAtual = index;
+                                            });
+                                          },
+                                          itemBuilder: (context, index) {
+                                            final personagem =
+                                                _elencoDados[index];
+                                            return Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                _construirCardImagem(
+                                                  personagem['imagem']
+                                                      as String?,
+                                                ),
+                                                const SizedBox(height: 12),
+                                                Text(
+                                                  personagem['nome'] as String,
+                                                  style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 25,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: _proximoPersonagem,
+                                    ),
+                                  ],
+                                ),
+                              Center(
+                                child: Text(
+                                  '${_indicePersonagemAtual + 1} de ${_elencoDados.length}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white60,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 30),
 
-                          // Resumo do mascote com acesso à página de detalhes.
+                          // Seção Curiosidades
                           Column(
                             key: _secaoCuriosidadesKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -481,11 +421,11 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // Imagem ilustrativa do mascote na página inicial.
+                              // --- SUBSTITUÍDO O CONTEÚDO PELA IMAGEM EXATA ---
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
-                                  'img/logoelixir.png',
+                                  'img/fundonovo.jpg',
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -520,7 +460,7 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 30),
 
-                          // Resumo visual do projeto com botão para mais detalhes.
+                          // Seção Projeto
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -536,7 +476,7 @@ class _MainAppState extends State<MainApp> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
-                                  'img/logoelixir.png',
+                                  'img/fundonovo.jpg',
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -565,7 +505,7 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 30),
 
-                          // Chamada visual para conhecer a equipe de desenvolvimento.
+                          // Seção Rapazes
                           Column(
                             key: _secaoRapazesKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -580,11 +520,11 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // Imagem de apresentação da equipe na página inicial.
+                              // --- SUBSTITUÍDO O CONTEÚDO PELA IMAGEM EXATA ---
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
-                                  'img/logoelixir.png',
+                                  'img/fundonovo.jpg',
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -631,80 +571,72 @@ class _MainAppState extends State<MainApp> {
       ),
     );
   }
-}
 
-/// Renderiza uma imagem local ou remota com dimensões e recorte configuráveis.
-/// Usa o logotipo como alternativa quando o caminho está vazio ou falha.
-Widget construirCardImagem(
-  String? path, {
-  double width = double.infinity,
-  double height = 200,
-  BoxFit fit = BoxFit.contain,
-}) {
-  // Distingue endereços web de caminhos de assets incluídos no aplicativo.
-  final imagemValida =
-      path != null &&
-      path.trim().isNotEmpty &&
-      (path.startsWith('http://') || path.startsWith('https://'));
-  final assetValido = path != null && path.trim().isNotEmpty;
+  Widget _construirCardImagem(String? path) {
+    final imagemValida =
+        path != null &&
+        path.trim().isNotEmpty &&
+        (path.startsWith('http://') || path.startsWith('https://'));
+    final assetValido = path != null && path.trim().isNotEmpty;
 
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20.0),
-      boxShadow: [
-        BoxShadow(
-          color: roxoEscuro.withValues(alpha: 0.15),
-          spreadRadius: 1,
-          blurRadius: 8,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(20.0),
-      child: imagemValida
-          ? Image.network(
-              path,
-              width: width,
-              height: height,
-              fit: fit,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Image.asset(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: roxoEscuro.withValues(alpha: 0.15),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20.0),
+        child: imagemValida
+            ? Image.network(
+                path,
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Image.asset(
+                    'img/logoelixir.png',
+                    width: double.infinity,
+                    height: 200,
+                    fit: BoxFit.contain,
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => Image.asset(
                   'img/logoelixir.png',
-                  width: width,
-                  height: height,
+                  width: double.infinity,
+                  height: 200,
                   fit: BoxFit.contain,
-                );
-              },
-              errorBuilder: (context, error, stackTrace) => Image.asset(
+                ),
+              )
+            : assetValido
+            ? Image.asset(
+                path,
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                    'img/logoelixir.png',
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.contain,
+                ),
+              )
+            : Image.asset(
                 'img/logoelixir.png',
-                width: width,
-                height: height,
+                width: double.infinity,
+                height: 200,
                 fit: BoxFit.contain,
               ),
-            )
-          : assetValido
-          ? Image.asset(
-              path,
-              width: width,
-              height: height,
-              fit: fit,
-              errorBuilder: (context, error, stackTrace) => Image.asset(
-                'img/logoelixir.png',
-                width: width,
-                height: height,
-                fit: BoxFit.contain,
-              ),
-            )
-          : Image.asset(
-              'img/logoelixir.png',
-              width: width,
-              height: height,
-              fit: BoxFit.contain,
-            ),
-    ),
-  );
+      ),
+    );
+  }
 }
 
 /// Página de história, preenchida no layout reutilizável de detalhes.
@@ -713,10 +645,9 @@ class HistoriaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mantém o texto e a imagem da história centralizados em um único layout.
     return const PaginaDetalhes(
       titulo: 'História',
-      imagem: 'img/logoelixir.png',
+              imagem: 'img/logoelixir.png',
       texto:
           'Wayne Szalinski é um inventor que trabalha em uma máquina capaz de encolher objetos. Durante uma experiência no sótão, uma bola de beisebol atravessa a janela e aciona acidentalmente o equipamento. O raio atinge Amy e Nick Szalinski e os vizinhos Russ Jr. e Ron Thompson, reduzindo as quatro crianças a poucos centímetros de altura. Como Wayne e Diane não percebem o acidente, as crianças acabam no lixo e são levadas para o quintal, que passa a parecer uma enorme selva. Perdidos entre folhas de grama, gotas de água e objetos gigantes, eles precisam encontrar o caminho de volta para casa. No percurso, enfrentam os aspersores, uma abelha e outros perigos, além de fazer amizade com uma formiga que chamam de Antie. Quando um escorpião ameaça o grupo, Antie tenta protegê-los e acaba morrendo. Enquanto isso, Wayne e Diane procuram pelos filhos e descobrem que a máquina foi ativada pela bola de beisebol. Com a ajuda do cachorro Quark, as crianças conseguem chamar a atenção dos pais. Wayne reconstrói o funcionamento da máquina e devolve todos ao tamanho normal.',
       itens: [],
@@ -724,7 +655,6 @@ class HistoriaPage extends StatelessWidget {
   }
 }
 
-/// Página dedicada que apresenta o elenco completo em uma lista rolável.
 class PersonagensPage extends StatefulWidget {
   const PersonagensPage({super.key});
 
@@ -733,11 +663,73 @@ class PersonagensPage extends StatefulWidget {
 }
 
 class _PersonagensPageState extends State<PersonagensPage> {
-  // Inicia a leitura compartilhada do JSON ao criar o estado da página.
-  final Future<List<Personagem>> _personagensFuture = carregarPersonagens();
+  final PageController _controller = PageController();
+  int _indiceAtual = 0;
+
+  static const personagens = [
+    (
+      'Nick Szalinski',
+      'Nick e seus amigos são reduzidos a poucos centímetros durante um acidente no laboratório.',
+      'Estrategista do grupo.',
+    ),
+    (
+      'Amy Szalinski',
+      'Amy enfrenta o quintal gigante e ajuda a manter o grupo unido.',
+      'Líder cuidadosa do grupo.',
+    ),
+    (
+      'Ron Thompson',
+      'Ron é um dos vizinhos atingidos pelo raio da máquina de encolher.',
+      'Aventureiro e prático.',
+    ),
+    (
+      'Russ Thompson',
+      'Russ precisa se adaptar rapidamente ao mundo enorme ao redor dele.',
+      'Companheiro e força do grupo.',
+    ),
+    (
+      'Wayne Szalinski',
+      'Wayne tenta entender o acidente causado pela máquina de encolher.',
+      'Inventor e pai da família.',
+    ),
+    (
+      'Diane Szalinski',
+      'Diane participa da busca pelos filhos desaparecidos.',
+      'Mãe e apoio da família.',
+    ),
+    (
+      'Quark',
+      'Quark ajuda a família a perceber que as crianças estão em perigo.',
+      'Cachorro e aliado da família.',
+    ),
+    (
+      'Antie',
+      'Antie se aproxima das crianças e se torna uma aliada inesperada.',
+      'Aliada da aventura.',
+    ),
+    (
+      'O Escorpião',
+      'O escorpião representa um dos maiores perigos encontrados no quintal.',
+      'Ameaça do quintal.',
+    ),
+    (
+      'A Abelha',
+      'A abelha transforma uma tarefa comum em um grande desafio para o grupo.',
+      'Perigo do quintal.',
+    ),
+  ];
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Cada cartão de personagem concentra o nome, a descrição curta e um avatar
+    // neutro em um bloco visual consistente. Essa estrutura facilita a leitura dos
+    // dados e deixa o layout padronizado para qualquer novo membro do elenco.
     return Container(
       color: roxoClaro,
       child: Center(
@@ -745,93 +737,78 @@ class _PersonagensPageState extends State<PersonagensPage> {
           width: 450,
           child: Scaffold(
             backgroundColor: roxoClaro,
-            appBar: AppBar(
-              backgroundColor: roxoEscuro,
-              centerTitle: true,
-              foregroundColor: Colors.white,
-              title: const Text('Personagens'),
-            ),
-            body: FutureBuilder<List<Personagem>>(
-              future: _personagensFuture,
-              builder: (context, snapshot) {
-                // Informa ao usuário quando não foi possível ler o elenco.
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('Não foi possível carregar os personagens.'),
-                  );
-                }
-                // Exibe indicador enquanto o asset JSON ainda está sendo lido.
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                // Exibe um cartão por personagem assim que os dados chegam.
-                final personagens = snapshot.data!;
-                return ListView(
-                  padding: const EdgeInsets.all(16),
+            appBar: AppBar(title: const Text('Personagens')),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
                   children: [
-                    for (final personagem in personagens)
-                      // Cartão com foto à esquerda e dados textuais à direita.
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 14),
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: roxoElixir,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: roxoEscuro.withValues(alpha: 0.2),
-                              blurRadius: 6,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
-                                width: 100,
-                                height: 110,
-                                child: construirCardImagem(
-                                  personagem.imagem,
-                                  width: 100,
-                                  height: 110,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
+                    SizedBox(
+                      height: 430,
+                      child: PageView.builder(
+                        controller: _controller,
+                        itemCount: personagens.length,
+                        onPageChanged: (index) =>
+                            setState(() => _indiceAtual = index),
+                        itemBuilder: (context, index) {
+                          final personagem = personagens[index];
+                          return Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  Image.asset(
+                                    'img/logoelixir.png',
+                                    height: 190,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  const SizedBox(height: 16),
                                   Text(
-                                    personagem.nome,
+                                    personagem.$1,
                                     style: const TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: roxoEscuro,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 12),
                                   Text(
-                                    personagem.descricao,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      height: 1.4,
-                                      color: Colors.white,
-                                    ),
+                                    'História: ${personagem.$2}\n\nFunção: ${personagem.$3}',
+                                    textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text('${_indiceAtual + 1} de ${personagens.length}'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () => _controller.previousPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          ),
+                          icon: const Icon(Icons.arrow_back_ios),
+                        ),
+                        IconButton(
+                          onPressed: () => _controller.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          ),
+                          icon: const Icon(Icons.arrow_forward_ios),
+                        ),
+                      ],
+                    ),
                   ],
-                );
-              },
+                ),
+              ),
             ),
           ),
         ),
@@ -846,6 +823,8 @@ class MascotePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A página do mascote reutiliza o template de informações detalhadas para manter
+    // a consistência visual com as demais páginas de apresentação do app.
     return const PaginaDetalhes(
       titulo: 'Mascote',
       imagem: 'img/mascote.png',
@@ -862,182 +841,93 @@ class ProjetoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Projeto>(
-      future: carregarProjeto(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final projeto = snapshot.data!;
-          return PaginaDetalhes(
-            titulo: projeto.titulo,
-            imagem: projeto.imagem,
-            texto: projeto.texto,
-            itens: projeto.itens,
-          );
-        }
-
-        return Scaffold(
-          backgroundColor: roxoClaro,
-          appBar: AppBar(
-            backgroundColor: roxoEscuro,
-            centerTitle: true,
-            title: const Text(
-              'Projeto',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          body: Center(
-            child: snapshot.hasError
-                ? const Text('Não foi possível carregar o conteúdo do projeto.')
-                : const CircularProgressIndicator(),
-          ),
-        );
-      },
+    return const PaginaDetalhes(
+      titulo: 'Projeto',
+      imagem: 'img/logoelixir.png',
+      texto:
+          'O projeto da Elixir Corp reúne a aplicação mobile, a documentação e a experiência interativa que estão sendo desenvolvidas pela equipe.',
+      itens: [
+        'Esta página apresenta a proposta e a evolução do projeto.',
+        'Novas informações, imagens e etapas serão adicionadas posteriormente.',
+      ],
     );
   }
 }
 
-/// Página que apresenta os integrantes e suas responsabilidades no projeto.
 class EquipePage extends StatelessWidget {
   const EquipePage({super.key});
 
+  // A lista de integrantes fica isolada do widget de apresentação para facilitar a
+  // manutenção dos dados da equipe. Dessa forma, qualquer atualização no nome,
+  // função ou descrição de um membro pode ser feita em um único ponto.
+  static const List<_Desenvolvedor> _desenvolvedores = [
+    _Desenvolvedor(
+      nome: 'Arthur Paixão Serafim',
+      imagem: 'img/arthurpaixao.png',
+      funcao: 'Documentação e desenvolvimento de cenas',
+      descricao:
+          'Fez toda a documentação do projeto, organizou os GitHub da equipe e participou do desenvolvimento das cenas.',
+    ),
+    _Desenvolvedor(
+      nome: 'Gabriel Coutinho Baptista',
+      imagem: 'img/gabrielcoutinh.png',
+      funcao: 'Modelagem 3D',
+      descricao:
+          'Modelou em 3D, no Blender, os objetos e os personagens do jogo.',
+    ),
+    _Desenvolvedor(
+      nome: 'Maria Eduarda Caetano Rizzo',
+      imagem: 'img/mariacaetano.png',
+      funcao: 'Desenvolvimento mobile e artes',
+      descricao:
+          'Desenvolveu o aplicativo mobile, criou as artes do jogo e escreveu as descrições dos personagens.',
+    ),
+    _Desenvolvedor(
+      nome: 'Rihan de Jesus de Andrade',
+      imagem: 'img/rihandejesus.png',
+      funcao: 'Líder do grupo e desenvolvimento Unity',
+      descricao:
+          'Lidera o grupo de TCC, criou artes dos personagens e desenvolveu, junto com Vinicius, a programação do jogo na Unity.',
+    ),
+    _Desenvolvedor(
+      nome: 'Vinicius de Almeida Abdala',
+      funcao: 'Programação e desenvolvimento do jogo',
+      descricao:
+          'Programou e desenvolveu o jogo em conjunto com o grupo, incluindo a parte de Unity com Rihan.',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    // Dados locais dos integrantes: nome, função e caminho da respectiva foto.
-    const membros = [
-      (
-        nome: 'Rihan de Jesus',
-        descricao: 'Líder do grupo de TCC, desenvolvedor da Unity e artista.',
-        imagem: 'img/rihan.jpeg',
-      ),
-      (
-        nome: 'Vinicius Abdala',
-        descricao: 'Vice-líder, desenvolvedor Unity e back-end.',
-        imagem: 'img/Abdala.jpeg',
-      ),
-      (
-        nome: 'Gabriel Coutinho',
-        descricao: 'Modelador 3D.',
-        imagem: 'img/coutinho.jpeg',
-      ),
-      (
-        nome: 'Maria Caetano Rizzo',
-        descricao: 'Desenvolvedora mobile e desenvolvedora de personagem.',
-        imagem: 'img/maria.jpeg',
-      ),
-      (
-        nome: 'Arthur Paixão',
-        descricao: 'Roteirista e desenvolvedor da parte da documentação.',
-        imagem: 'img/arthur.jpeg',
-      ),
-    ];
-
-    return Container(
-      color: roxoClaro,
-      child: Center(
-        child: SizedBox(
-          width: 450,
-          child: Scaffold(
-            backgroundColor: roxoClaro,
-            appBar: AppBar(
-              backgroundColor: roxoEscuro,
-              centerTitle: true,
-              title: const Text(
-                'Equipe de desenvolvimento',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              foregroundColor: Colors.white,
-            ),
-            body: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                // Cada integrante recebe um cartão com retrato e descrição.
-                for (final membro in membros)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: roxoElixir,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: roxoEscuro.withValues(alpha: 0.2),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            membro.imagem,
-                            width: 100,
-                            height: 110,
-                            fit: BoxFit.cover,
-                            semanticLabel: membro.nome,
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                membro.nome,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                membro.descricao,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  height: 1.4,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                const SizedBox(height: 4),
-                ElevatedButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text('Voltar para a página inicial'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: roxoBotao,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return PaginaDetalhes(
+      titulo: 'Equipe de desenvolvimento',
+      imagem: 'img/logoelixir.png',
+      texto: 'Conheça a equipe responsável pelo desenvolvimento da Elixir Corp.',
+      itens: _desenvolvedores
+          .map((desenvolvedor) =>
+              '${desenvolvedor.nome} - ${desenvolvedor.funcao}\n${desenvolvedor.descricao}')
+          .toList(),
     );
   }
+}
+
+class _Desenvolvedor {
+  final String nome;
+  final String? imagem;
+  final String funcao;
+  final String descricao;
+
+  const _Desenvolvedor({
+    required this.nome,
+    this.imagem,
+    required this.funcao,
+    required this.descricao,
+  });
 }
 
 /// Layout comum às páginas de história, mascote e projeto.
 /// Recebe título, imagem, texto principal e uma lista opcional de destaques.
 class PaginaDetalhes extends StatelessWidget {
-  // Conteúdo variável que cada página injeta no layout compartilhado.
   final String titulo;
   final String imagem;
   final String texto;
@@ -1053,7 +943,6 @@ class PaginaDetalhes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Organiza o conteúdo em uma página rolável para acomodar textos longos.
     return Container(
       color: roxoClaro,
       child: Center(
