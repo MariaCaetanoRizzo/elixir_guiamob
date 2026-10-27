@@ -1,0 +1,107 @@
+[
+  {
+    "id": 1,
+    "nome": "Carlos Dias",
+    "descricao": "Protagonista do jogo, está trabalhando como fotografo para um serviço jornalístico.",
+    "principal": true,
+    "imagem": "img/personagens/carlos.jpeg"
+  },
+  {
+    "id": 2,
+    "nome": "Rita Santana",
+    "descricao": "Chefe de Carlos Dias, CEO da empresa de jornalismo a qual Carlos Trabalha.",
+    "principal": true,
+    "imagem": ""
+  },
+  {
+    "id": 3,
+    "nome": "Olga Pires",
+    "descricao": "Senhora conservadora simpática, trabalha na sua pequena floricultura ambulante.",
+    "principal": false,
+    "imagem": "img/personagens/olga.png"
+  },
+  {
+    "id": 4,
+    "nome": "Rafael Souza",
+    "descricao": "Jovem alternativo e rebelde, faz parte do MURAL.",
+    "principal": false,
+    "imagem": "img/personagens/rafael.png"
+  },
+  {
+    "id": 5,
+    "nome": "Neuza Oliveira",
+    "descricao": "Senhora ativa e bem humorada",
+    "principal": false,
+    "imagem": "img/personagens/Neuza.png"
+  },
+  {
+    "id": 6,
+    "nome": "Fortunato Gomes",
+    "descricao": "Senhor meio lunático, conhecido como \"doidinho do parque\".",
+    "principal": false,
+    "imagem": ""
+  },
+  {
+    "id": 8,
+    "nome": "Íris Junqueira",
+    "descricao": " Veterinária da cidade",
+    "principal": false,
+    "imagem": "img/personagens/iris.jpeg"
+  },
+  {
+    "id": 9,
+    "nome": "Léticia Magalhães",
+    "descricao": "Ativista ambiental.",
+    "principal": false,
+    "imagem": ""
+  },
+  {
+    "id": 10,
+    "nome": "Caio Duarte",
+    "descricao": " Ciclista e parte do MURAL",
+    "principal": false,
+    "imagem": ""
+  },
+  {
+    "id": 11,
+    "nome": "Clarice Duarte",
+    "descricao": " Artista muralista que trabalha em um grande projeto do MURAL",
+    "principal": false,
+    "imagem": ""
+  },
+  {
+    "id": 12,
+    "nome": "Enzo Ferreira",
+    "descricao": " Artista observacional do MURAL ",
+    "principal": false,
+    "imagem": ""
+  },
+  {
+    "id": 13,
+    "nome": "Silvia Toledo",
+    "descricao": " Fotografa e atuante do MURAL",
+    "principal": false,
+    "imagem": ""
+  },
+  {
+    "id": 14,
+    "nome": "João",
+    "descricao": " Fã número 1# e aplicado da CHARLOTT3",
+    "principal": false,
+    "imagem": ""
+  },
+  {
+    "id": 15,
+    "nome": "Michel Neves",
+    "descricao": " Segurança da CHARLOTT3",
+    "principal": false,
+    "imagem": ""
+  },
+  {
+    "id": 16,
+    "nome": "CHARLOTT3",
+    "descricao": " IDOL que irá cantar no festival",
+    "principal": false,
+    "imagem": ""
+  }
+]
