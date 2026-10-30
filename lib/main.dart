@@ -241,17 +241,11 @@ class _MainAppState extends State<MainApp> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    // Estrutura visual da página inicial: o conteúdo principal fica dentro
-                    // de um contêiner roxo com borda arredondada e sombra, dando destaque
-                    // ao painel principal da apresentação do app.
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        // Container principal da home, com espaçamento lateral e um bloco
-                        // central para agrupar todas as seções de apresentação.
-                        Container(
+                    // Container principal da home, com espaçamento lateral e um bloco
+                    // central para agrupar todas as seções de apresentação.
+                    Container(
                           margin: const EdgeInsets.symmetric(horizontal: 15),
-                          padding: const EdgeInsets.fromLTRB(20, 80, 20, 20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             color: roxoElixir,
                             borderRadius: BorderRadius.circular(20),
