@@ -1,15 +1,22 @@
 // Widgets e componentes visuais usados nas telas do aplicativo.
 import 'package:flutter/material.dart';
 
+// Arquivo principal da aplicação mobile da Elixir Corp.
+// Este widget inicializa o app, define o tema visual e controla a navegação entre
+// as principais páginas de apresentação do projeto.
 void main() {
   runApp(const MainApp());
 }
 
+// Paleta de cores utilizada para manter uma identidade visual consistente em todas
+// as telas do aplicativo.
 const roxoElixir = Color(0xFF6A1B9A);
 const roxoBotao = Color(0xFF9B59B6);
 const roxoEscuro = Color(0xFF35104F);
 const roxoClaro = Color(0xFFF3E8FA);
 
+// Widget raiz do aplicativo. Mantém o estado da navegação e das seções da página
+// inicial, além de controlar o carrossel dos personagens.
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
@@ -18,19 +25,28 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  // Controla a rolagem da página inicial para permitir navegação suave entre as
+  // seções principais da landing page.
   final ScrollController _scrollController = ScrollController();
+
+  // Controla as páginas do carrossel de personagens.
   final PageController _pageController = PageController();
+
+  // Chave global do navigator para abrir páginas de detalhe sem depender do
+  // contexto imediato da árvore de widgets.
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  // Índice atual usado para exibir a posição no carrossel.
+
+  // Índice atual usado para exibir a posição no carrossel de personagens.
   int _indicePersonagemAtual = 0;
 
-  // Chaves usadas para a rolagem automática entre seções.
+  // Chaves usadas para apontar seções específicas da home e facilitar rolagem/âncoras.
   final GlobalKey _secaoHistoriaKey = GlobalKey();
   final GlobalKey _secaoElencoKey = GlobalKey();
   final GlobalKey _secaoCuriosidadesKey = GlobalKey();
   final GlobalKey _secaoRapazesKey = GlobalKey();
 
-  // Dados dos 8 personagens para o carrossel animado
+  // Dados dos personagens exibidos no carrossel principal. Cada item guarda nome,
+  // imagem e papel dentro da história do filme.
   final List<Map<String, dynamic>> _elencoDados = [
     {
       'nome': 'Nick Szalinski',
@@ -114,6 +130,8 @@ class _MainAppState extends State<MainApp> {
     }
   }
 
+  // Abre uma nova rota de detalhe mantendo a navegação centralizada no navigator do
+  // MaterialApp principal.
   void _navegarParaPagina(Widget pagina) {
     _navigatorKey.currentState?.push(
       MaterialPageRoute(builder: (context) => pagina),
@@ -132,6 +150,9 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    // Estrutura principal da home do aplicativo. A tela é montada em um container
+    // centralizado com largura fixa para manter uma experiência de apresentação e
+    // leitura mais confortável em dispositivos móveis.
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
@@ -220,52 +241,102 @@ class _MainAppState extends State<MainApp> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 15),
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: roxoElixir,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: roxoEscuro.withValues(alpha: 0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(16.0),
-                                child: Image.asset(
-                                  'img/fundobranco.jpg',
-                                  width: double.infinity,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Container(
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.3),
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                              ),
-                              Image.asset(
-                                'img/logoelixir.png',
-                                height: 90,
-                                fit: BoxFit.contain,
+                    // Estrutura visual da página inicial: o conteúdo principal fica dentro
+                    // de um contêiner roxo com borda arredondada e sombra, dando destaque
+                    // ao painel principal da apresentação do app.
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // Container principal da home, com espaçamento lateral e um bloco
+                        // central para agrupar todas as seções de apresentação.
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          padding: const EdgeInsets.fromLTRB(20, 80, 20, 20),
+                          decoration: BoxDecoration(
+                            color: roxoElixir,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: roxoEscuro.withValues(alpha: 0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
                               ),
                             ],
                           ),
-                          const SizedBox(height: 25),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Banner inicial da home com imagem de fundo, camada escura e
+                              // texto de apresentação para reforçar a identidade da marca.
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  // Imagem de destaque da home, com borda arredondada e
+                                  // preenchimento total para dar impacto visual.
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                    child: Image.asset(
+                                      'img/fundobranco.jpg',
+                                      width: double.infinity,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  // Camada escura sobre a imagem para melhorar legibilidade do texto.
+                                  Container(
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withValues(alpha: 0.4),
+                                      borderRadius: BorderRadius.circular(16.0),
+                                    ),
+                                  ),
+                                  // Texto principal posicionado sobre a imagem para manter uma
+                                  // apresentação mais profissional sem alterar a navegação.
+                                  Positioned(
+                                    left: 16,
+                                    right: 16,
+                                    bottom: 18,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Elixir Corp',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 26,
+                                            fontWeight: FontWeight.bold,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.black.withValues(
+                                                  alpha: 0.35,
+                                                ),
+                                                offset: Offset(1, 2),
+                                                blurRadius: 6,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Descubra a aventura em um mundo em miniatura.',
+                                          style: TextStyle(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.9,
+                                            ),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 25),
 
-                          // Seção História
+                          // Seção de história: apresenta um teaser visual com a imagem da
+                          // narrativa principal e um botão para abrir a tela detalhada do filme.
                           Column(
                             key: _secaoHistoriaKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,7 +351,8 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // --- SUBSTITUÍDO O CONTEÚDO PELA IMAGEM EXATA ---
+                              // Banner ilustrativo da história, usando uma imagem temática para
+                              // despertar interesse pelo conteúdo completo da página de detalhes.
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
@@ -319,7 +391,9 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 30),
 
-                          // Seção Elenco
+                          // Seção de elenco: o carrossel dos personagens permite navegar entre
+                          // os integrantes principais da história com botões laterais e contador
+                          // de posição atual.
                           Column(
                             key: _secaoElencoKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,6 +411,7 @@ class _MainAppState extends State<MainApp> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
+                                    // Botão para retroceder no carrossel dos personagens.
                                     IconButton(
                                       icon: const Icon(
                                         Icons.arrow_back_ios,
@@ -383,6 +458,7 @@ class _MainAppState extends State<MainApp> {
                                         ),
                                       ),
                                     ),
+                                    // Botão para avançar no carrossel dos personagens.
                                     IconButton(
                                       icon: const Icon(
                                         Icons.arrow_forward_ios,
@@ -406,7 +482,8 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 30),
 
-                          // Seção Curiosidades
+                          // Seção do mascote: mantém o mesmo padrão visual das demais seções,
+                          // com imagem ilustrativa e botão para abrir a página específica.
                           Column(
                             key: _secaoCuriosidadesKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,7 +498,8 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // --- SUBSTITUÍDO O CONTEÚDO PELA IMAGEM EXATA ---
+                              // Imagem de destaque da seção de mascote para reforçar a temporária
+                              // identidade visual da categoria antes de abrir a tela detalhada.
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
@@ -460,7 +538,8 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 30),
 
-                          // Seção Projeto
+                          // Seção do projeto: apresenta a proposta geral do app e dá acesso à
+                          // página detalhada da visão do desenvolvimento.
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -473,6 +552,8 @@ class _MainAppState extends State<MainApp> {
                                 ),
                               ),
                               const SizedBox(height: 12),
+                              // Imagem ilustrativa da proposta do projeto, seguindo o mesmo padrão
+                              // visual das demais seções da página inicial.
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
@@ -505,7 +586,9 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 30),
 
-                          // Seção Rapazes
+                          // Seção da equipe: fecha a apresentação da home com a imagem e o acesso
+                          // à página de desenvolvimento, onde os integrantes e suas funções são
+                          // detalhados.
                           Column(
                             key: _secaoRapazesKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -520,7 +603,8 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // --- SUBSTITUÍDO O CONTEÚDO PELA IMAGEM EXATA ---
+                              // Imagem de destaque da equipe, mantendo o mesmo padrão visual das
+                              // demais seções para uma identidade uniforme.
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
@@ -572,6 +656,8 @@ class _MainAppState extends State<MainApp> {
     );
   }
 
+  // Cria um card com suporte a imagens remotas ou assets locais. Caso a imagem não
+  // exista ou falhe no carregamento, o app usa o logo da Elixir como fallback.
   Widget _construirCardImagem(String? path) {
     final imagemValida =
         path != null &&
@@ -639,7 +725,9 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-/// Página de história, preenchida no layout reutilizável de detalhes.
+/// Página de história, preenchida por um layout reutilizável de detalhes.
+/// Essa tela apresenta o resumo principal da narrativa do filme e mantém a mesma
+/// estrutura visual das páginas de apresentação do projeto.
 class HistoriaPage extends StatelessWidget {
   const HistoriaPage({super.key});
 
@@ -655,6 +743,8 @@ class HistoriaPage extends StatelessWidget {
   }
 }
 
+// Tela dedicada a apresentar os personagens da história em um carrossel de páginas.
+// Cada página concentra nome, resumo e papel do personagem no enredo.
 class PersonagensPage extends StatefulWidget {
   const PersonagensPage({super.key});
 
@@ -663,9 +753,14 @@ class PersonagensPage extends StatefulWidget {
 }
 
 class _PersonagensPageState extends State<PersonagensPage> {
+  // Controla a navegação horizontal entre os personagens da página.
   final PageController _controller = PageController();
+
+  // Índice atual do personagem visível no carrossel.
   int _indiceAtual = 0;
 
+  // Lista centralizada dos personagens e de suas descrições curtas para manter o
+  // conteúdo fácil de atualizar.
   static const personagens = [
     (
       'Nick Szalinski',
@@ -817,7 +912,8 @@ class _PersonagensPageState extends State<PersonagensPage> {
   }
 }
 
-/// Página de detalhes do mascote usando o layout compartilhado.
+/// Página de detalhes do mascote usando o mesmo layout compartilhado das outras
+/// páginas de apresentação.
 class MascotePage extends StatelessWidget {
   const MascotePage({super.key});
 
@@ -835,7 +931,7 @@ class MascotePage extends StatelessWidget {
   }
 }
 
-/// Página de detalhes que resume a proposta do projeto.
+/// Página de detalhes que resume a proposta e a evolução do projeto.
 class ProjetoPage extends StatelessWidget {
   const ProjetoPage({super.key});
 
@@ -854,6 +950,7 @@ class ProjetoPage extends StatelessWidget {
   }
 }
 
+// Página que lista os integrantes do projeto e suas contribuições.
 class EquipePage extends StatelessWidget {
   const EquipePage({super.key});
 
@@ -911,6 +1008,8 @@ class EquipePage extends StatelessWidget {
   }
 }
 
+// Modelo auxiliar usado para representar um membro da equipe dentro da página de
+// apresentação. A estrutura centraliza os dados do colaborador em um único objeto.
 class _Desenvolvedor {
   final String nome;
   final String? imagem;
@@ -925,8 +1024,9 @@ class _Desenvolvedor {
   });
 }
 
-/// Layout comum às páginas de história, mascote e projeto.
-/// Recebe título, imagem, texto principal e uma lista opcional de destaques.
+/// Layout comum às páginas de história, mascote, projeto e equipe.
+/// Recebe título, imagem, texto principal e uma lista opcional de destaques para
+/// manter o visual consistente entre as telas de detalhe.
 class PaginaDetalhes extends StatelessWidget {
   final String titulo;
   final String imagem;
