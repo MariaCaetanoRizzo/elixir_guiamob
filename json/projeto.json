@@ -1,6 +1,35 @@
 {
-  "titulo": "Projeto",
-  "imagem": "img/logoelixir.png",
-  "texto": "O trabalho de conclusão de curso consiste no desenvolvimento de um jogo digital que utiliza a gamificação como proposta de interação com uma locadora de bicicletas e patinetes elétricos. A experiência se passa na cidade fictícia de Eucaliptos, onde o jogador acompanha a jornada de Carlos Dias, um funcionário de jornal que recebe a oportunidade de viajar para a cidade durante uma semana para realizar a cobertura de um festival local. Durante sua estadia, Carlos utiliza os serviços de locação de bicicletas e patinetes elétricos para se deslocar entre os pontos de interesse, facilitando sua movimentação pela cidade e permitindo com que ele cumpra sua programação do trabalho. Ao longo da história, Carlos visita diferentes ambientes, como a praça central, um bosque, um mural artístico e o local de realização do festival, onde conhece moradores, artistas e outras pessoas que contribuem para o desenvolvimento de sua experiência. Por meio de diálogos e interações com esses personagens, o protagonista registra situações cotidianas, acontecimentos inusitados e manifestações presentes na cidade. Além de acompanhar suas atividades profissionais, a história apresenta o reconhecimento do seu talento para a fotografia e sua reflexão sobre as próprias escolhas profissionais. Nesse contexto, a utilização das bicicletas e dos patinetes elétricos está interligada à exploração dos ambientes e ao desenvolvimento da narrativa, relacionando a proposta da locadora à experiência proporcionada pelo jogo. O projeto, então, une elementos de narrativa interativa, exploração de cenários e deslocamento urbano em uma experiência digital vinculada à proposta de gamificação de uma locadora de bicicletas e patinetes elétricos.",
-  "itens": []
+  "historia": {
+    "titulo": "História",
+    "imagem": "img/logoelixir.png",
+    "paragrafos": [
+      "A Elixir Corp. nasceu em 03 de maio de 2026, a partir de uma ideia que começou dentro da sala de aula da ETEC Prof. Basilides de Godoy. Foi durante o desenvolvimento de um projeto de TCC que Rihan de Jesus de Andrade e João Henrique Bonaldi se conheceram e deram início a esse projeto.",
+      "O desafio era criar uma empresa capaz de desenvolver e-commerces e transformá-los em Advertising Games, unindo tecnologia, criatividade e inovação para oferecer uma experiência diferente aos clientes.",
+      "Para tirar essa ideia do papel, foi preciso organizar equipes, dividir responsabilidades e trabalhar em conjunto para desenvolver tanto as lojas virtuais quanto os jogos. Cada etapa trouxe novos desafios, aprendizados e oportunidades de colocar nossos conhecimentos em prática.",
+      "Nosso primeiro projeto foi voltado ao aluguel de patinetes e bicicletas elétricas. A partir dele, desenvolvemos um e-commerce funcional e criamos o jogo \"Eucaliptos\", transformando a proposta inicial em um projeto completo.",
+      "No final, conseguimos muito mais do que concluir um trabalho acadêmico. Construímos algo que representava nosso esforço, nossas ideias e tudo o que aprendemos durante o processo. Foi assim que a Elixir Corp. ganhou vida: da união de dois grupos de pessoas com vontade de criar, aprender e transformar ideias em realidade."
+    ]
+  },
+  "mascote": {
+    "titulo": "Mascote",
+    "imagem": "img/mascote.png",
+    "paragrafos": [
+      "1. EXPLICAÇÃO DO MASCOTE",
+      "O Slopinho é o, mascote oficial do departamento Elixir, responsável pelo desenvolvimento de soluções de gamificação para empresas contratantes. Seu visual apresenta um personagem de aparência geométrica e estilizada, com predominância de tons de roxo e contornos pretos, transmitindo uma identidade visual descontraída, moderna e amigável.",
+      "Seu principal diferencial está na representação de duas expressões distintas: um lado bravo e outro feliz. Essa característica representa a filosofia da Elixir: \"Melhoramos tudo o que tocamos\". A expressão brava simboliza a insatisfação com aquilo que pode ser melhorado, enquanto a expressão feliz representa a transformação positiva alcançada após a intervenção da empresa. Dessa forma, o mascote demonstra visualmente a ideia de que todo processo pode evoluir e se tornar melhor.",
+      "A escolha das tonalidades de roxo busca representar criatividade, inovação e imaginação, características fundamentais para o desenvolvimento de experiências gamificadas. Seu formato simples e expressivo também contribui para criar uma figura de fácil identificação, aproximando a Elixir de seus clientes e tornando a comunicação do departamento mais descontraída.",
+      "O Slopinho representa a essência da Elixir: transformar atividades e processos tradicionais em experiências mais interativas, divertidas e envolventes por meio da gamificação. Assim como sua aparência combina duas expressões diferentes, o departamento busca transformar realidades, identificando oportunidades de melhoria e desenvolvendo soluções criativas e personalizadas para cada empresa contratante."
+    ]
+  },
+  "projeto": {
+    "titulo": "Projeto",
+    "imagem": "img/logoelixir.png",
+    "paragrafos": [
+      "O trabalho de conclusão de curso consiste no desenvolvimento de um jogo digital que utiliza a gamificação como proposta de interação com uma locadora de bicicletas e patinetes elétricos. A experiência se passa na cidade fictícia de Eucaliptos, onde o jogador acompanha a jornada de Carlos Dias, um funcionário de jornal que recebe a oportunidade de viajar para a cidade durante uma semana para realizar a cobertura de um festival local.",
+      "Durante sua estadia, Carlos utiliza os serviços de locação de bicicletas e patinetes elétricos para se deslocar entre os pontos de interesse, facilitando sua movimentação pela cidade e permitindo com que ele cumpra sua programação do trabalho. Ao longo da história, Carlos visita diferentes ambientes, como a praça central, um bosque, um mural artístico e o local de realização do festival, onde conhece moradores, artistas e outras pessoas que contribuem para o desenvolvimento de sua experiência.",
+      "Por meio de diálogos e interações com esses personagens, o protagonista registra situações cotidianas, acontecimentos inusitados e manifestações presentes na cidade. Além de acompanhar suas atividades profissionais, a história apresenta o reconhecimento do seu talento para a fotografia e sua reflexão sobre as próprias escolhas profissionais.",
+      "Nesse contexto, a utilização das bicicletas e dos patinetes elétricos está interligada à exploração dos ambientes e ao desenvolvimento da narrativa, relacionando a proposta da locadora à experiência proporcionada pelo jogo. O projeto, então, une elementos de narrativa interativa, exploração de cenários e deslocamento urbano em uma experiência digital vinculada à proposta de gamificação de uma locadora de bicicletas e patinetes elétricos."
+    ],
+    "itens": []
+  }
 }

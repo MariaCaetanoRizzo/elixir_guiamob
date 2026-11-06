@@ -1,17 +1,11 @@
-// Decodificação do arquivo JSON que contém os dados do elenco.
 import 'dart:convert';
 
-// Widgets e componentes visuais usados nas telas do aplicativo.
 import 'package:flutter/material.dart';
-// Acesso aos assets empacotados, como o JSON e as imagens locais.
 import 'package:flutter/services.dart';
 
-/// Modelo imutável que representa um personagem carregado do arquivo JSON.
-/// Cada instância desse objeto guarda os dados básicos do elenco usado em vários pontos da app.
-/// A estrutura foi criada para separar o conteúdo bruto do JSON da interface visual do Flutter.
+/// Guarda as informações de um personagem lidas do arquivo do elenco.
+/// A tela usa este modelo para mostrar nome, descrição e imagem sem acessar o JSON diretamente.
 class Personagem {
-  /// Cria um personagem com todos os dados fornecidos pelo arquivo.
-  /// Os campos obrigatórios deixam o objeto consistente e evitam valores nulos inesperados.
   const Personagem({
     required this.id,
     required this.nome,
@@ -20,14 +14,13 @@ class Personagem {
     required this.imagem,
   });
 
-  final int id; // Identificador único do personagem no elenco.
-  final String nome; // Nome exibido nas páginas e no carrossel.
-  final String descricao; // Texto descritivo exibido junto ao nome.
-  final bool principal; // Indica se o personagem pertence ao núcleo principal.
-  final String imagem; // Caminho local ou endereço remoto da imagem.
+  final int id; // Número que diferencia este personagem dos demais.
+  final String nome; // Nome mostrado no carrossel e na lista do elenco.
+  final String descricao; // Texto que explica quem é o personagem.
+  final bool principal; // Informa se ele faz parte do grupo principal.
+  final String imagem; // Caminho de uma imagem do app ou endereço da internet.
 
-  /// Converte um registro JSON em um objeto usado pela interface Flutter.
-  /// Este factory atua como ponte entre os dados cru e o modelo tipado da aplicação.
+  /// Lê os campos de um personagem no JSON e cria um objeto Personagem.
   factory Personagem.fromJson(Map<String, dynamic> json) {
     return Personagem(
       id: json['id'] as int,
@@ -39,19 +32,16 @@ class Personagem {
   }
 }
 
-// Cache da leitura para que a tela inicial e a página de elenco compartilhem
-// a mesma operação assíncrona e os mesmos dados carregados.
-// Isso evita realizar a leitura do JSON várias vezes durante a navegação do app.
+// Guarda a leitura do elenco para que as telas compartilhem o mesmo resultado.
 Future<List<Personagem>>? _personagensEmCarregamento;
 
-/// Lê o JSON do bundle, converte cada registro e limita o elenco a 16 itens.
-/// A função usa uma variável global de cache para reaproveitar o mesmo carregamento.
+/// Lê o arquivo do elenco, transforma os registros em Personagem e usa até 16.
+/// A leitura fica guardada para não abrir o mesmo arquivo várias vezes.
 Future<List<Personagem>> carregarPersonagens() {
   return _personagensEmCarregamento ??= rootBundle
       .loadString('json/arquivo.json')
       .then((conteudo) {
-        // Decodifica a lista dinâmica e transforma cada mapa no modelo tipado.
-        // O cast para List<dynamic> é necessário porque o JSON vem em formato genérico.
+        // O JSON chega como dados genéricos; aqui cada registro vira um Personagem.
         final dados = jsonDecode(conteudo) as List<dynamic>;
         return dados
             .map((item) => Personagem.fromJson(item as Map<String, dynamic>))
@@ -60,72 +50,85 @@ Future<List<Personagem>> carregarPersonagens() {
       });
 }
 
-/// Modelo tipado do conteúdo apresentado na página Projeto.
-/// O projeto possui título, imagem de destaque, texto principal e lista de destaques.
-class Projeto {
-  const Projeto({
+/// Reúne os textos e a imagem que uma página precisa para ser montada.
+class ConteudoPagina {
+  const ConteudoPagina({
     required this.titulo,
     required this.imagem,
-    required this.texto,
+    required this.paragrafos,
     required this.itens,
   });
 
-  final String titulo; // Nome do projeto mostrado no cabeçalho da página.
-  final String imagem; // Caminho da imagem ilustrativa da proposta.
-  final String texto; // Texto explicativo principal do projeto.
-  final List<String> itens; // Lista de pontos destacados na apresentação.
+  final String titulo; // Texto que aparece no topo e no conteúdo da página.
+  final String imagem; // Imagem principal mostrada antes do texto.
+  final List<String>
+  paragrafos; // Partes do texto, separadas para facilitar a leitura.
+  final List<String> itens; // Lista opcional de destaques abaixo do texto.
 
-  /// Converte um mapa JSON em um objeto Projeto para uso na interface.
-  factory Projeto.fromJson(Map<String, dynamic> json) {
-    return Projeto(
+  // Junta os parágrafos com uma linha em branco entre eles.
+  String get texto => paragrafos.join('\n\n');
+
+  /// Lê a seção de uma página no JSON e cria os dados que a tela vai exibir.
+  factory ConteudoPagina.fromJson(Map<String, dynamic> json) {
+    return ConteudoPagina(
       titulo: json['titulo'] as String,
       imagem: json['imagem'] as String,
-      texto: json['texto'] as String,
-      itens: List<String>.from(json['itens'] as List<dynamic>),
+      paragrafos: List<String>.from(json['paragrafos'] as List<dynamic>),
+      itens: List<String>.from(json['itens'] as List<dynamic>? ?? const []),
     );
   }
 }
 
-// Cache do conteúdo do projeto para não ler o mesmo arquivo do bundle repetidamente.
-Future<Projeto>? _projetoEmCarregamento;
+/// Agrupa os dados das três páginas que usam conteúdo do arquivo projeto.json.
+class ConteudoApp {
+  const ConteudoApp({
+    required this.historia,
+    required this.mascote,
+    required this.projeto,
+  });
 
-/// Carrega do bundle o conteúdo que alimenta a página Projeto.
-/// O JSON é convertido em um modelo Projeto e reaproveitado em toda a vida do app.
-Future<Projeto> carregarProjeto() {
-  return _projetoEmCarregamento ??= rootBundle
+  final ConteudoPagina historia;
+  final ConteudoPagina mascote;
+  final ConteudoPagina projeto;
+
+  /// Cria cada página a partir da seção com o mesmo nome no JSON.
+  factory ConteudoApp.fromJson(Map<String, dynamic> json) {
+    return ConteudoApp(
+      historia: ConteudoPagina.fromJson(
+        json['historia'] as Map<String, dynamic>,
+      ),
+      mascote: ConteudoPagina.fromJson(json['mascote'] as Map<String, dynamic>),
+      projeto: ConteudoPagina.fromJson(json['projeto'] as Map<String, dynamic>),
+    );
+  }
+}
+
+// Mantém uma única leitura de projeto.json para História, Mascote e Projeto.
+Future<ConteudoApp>? _conteudoEmCarregamento;
+
+/// Abre projeto.json e converte os dados para o modelo usado pelas telas.
+/// O Future guardado permite que as três páginas reutilizem a mesma leitura.
+Future<ConteudoApp> carregarConteudo() {
+  return _conteudoEmCarregamento ??= rootBundle
       .loadString('json/projeto.json')
       .then((conteudo) {
         final dados = jsonDecode(conteudo) as Map<String, dynamic>;
-        return Projeto.fromJson(dados);
+        return ConteudoApp.fromJson(dados);
       });
 }
 
-// Cache do texto do mascote para evitar vários acessos ao arquivo de texto.
-Future<String>? _textoMascoteEmCarregamento;
-
-/// Carrega do bundle o texto que apresenta o mascote.
-/// O resultado é uma String simples que pode ser exibida diretamente em um Text.
-Future<String> carregarTextoMascote() {
-  return _textoMascoteEmCarregamento ??= rootBundle.loadString(
-    'json/mascote.txt',
-  );
-}
-
-// Ponto de entrada: cria a árvore de widgets e inicia o aplicativo Flutter.
-// Todo app Flutter precisa de uma função main que chama runApp com o widget raiz.
+// O Flutter começa por aqui e mostra MainApp como widget principal.
 void main() {
   runApp(const MainApp());
 }
 
-// Cores compartilhadas para manter a identidade visual consistente nas telas.
-// Essa paleta define a identidade visual roxa do projeto e é reutilizada em vários widgets.
+// Cores reaproveitadas nas telas para manter o visual do app consistente.
 const roxoElixir = Color(0xFF6A1B9A);
 const roxoBotao = Color(0xFF9B59B6);
 const roxoEscuro = Color(0xFF35104F);
 const roxoClaro = Color(0xFFF3E8FA);
 
-/// Widget raiz com estado para controlar rolagem, navegação e carrossel.
-/// Uma tela inicial com várias seções e acesso às páginas de conteúdo do projeto.
+/// Cria a página inicial e permite abrir as outras páginas do app.
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
@@ -134,33 +137,26 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  // Estado principal do aplicativo: controla rolagem, navegação e posição do carrossel.
-  // Esta classe gerencia o ciclo de vida da tela inicial e as interações entre as seções.
-  // Controladores da rolagem da página inicial e do carrossel de personagens.
-  // O ScrollController acompanha a navegação vertical da home e o PageController controla a troca de slides.
+  // O primeiro controller move a página para cima e para baixo.
   final ScrollController _scrollController = ScrollController();
+  // O segundo controller muda o personagem mostrado no carrossel.
   final PageController _pageController = PageController();
-  // Permite navegar para as páginas mantendo uma única pilha de rotas.
-  // Com esse navigator global, a aplicação pode empilhar telas sem depender de um scaffold local.
+  // Permite abrir as outras páginas sem perder a pilha de navegação do app.
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  // A mesma carga de personagens é usada no carrossel e em outras páginas.
-  // Isso evita duplicar o carregamento do JSON em diferentes widgets.
+  // Mantém a mesma leitura do elenco enquanto a tela inicial estiver aberta.
   final Future<List<Personagem>> _personagensFuture = carregarPersonagens();
-  // Índice atual usado para exibir a posição no carrossel.
-  // Esse valor é atualizado sempre que o PageView muda de página.
+  // Guarda o número da página selecionada para atualizar o contador.
   int _indicePersonagemAtual = 0;
 
-  // Chaves que identificam as seções da página inicial para navegação/rolagem.
-  // Elas permitem apontar diretamente para uma parte da home quando a lógica demanda rolagem ou foco.
+  // Marcam as seções da página inicial para que possam ser localizadas.
   final GlobalKey _secaoHistoriaKey = GlobalKey();
   final GlobalKey _secaoElencoKey = GlobalKey();
   final GlobalKey _secaoCuriosidadesKey = GlobalKey();
   final GlobalKey _secaoRapazesKey = GlobalKey();
 
-  // Avança uma posição ou volta ao primeiro personagem ao chegar ao fim.
-  // Esse método é usado pelos botões de navegação do carrossel e mantém a rotação infinita.
+  // O botão da direita avança uma página; no final, volta ao primeiro personagem.
   Future<void> _proximoPersonagem() async {
-    // Aguarda o carregamento para conhecer o tamanho total do elenco.
+    // Espera o JSON terminar de carregar antes de conferir quantos personagens há.
     final personagens = await _personagensFuture;
     if (_indicePersonagemAtual < personagens.length - 1) {
       _pageController.nextPage(
@@ -176,7 +172,7 @@ class _MainAppState extends State<MainApp> {
     }
   }
 
-  // Volta uma posição ou salta para o último personagem no início da lista.
+  // O botão da esquerda volta uma página; no começo, vai ao último personagem.
   Future<void> _personagemAnterior() async {
     final personagens = await _personagensFuture;
     if (_indicePersonagemAtual > 0) {
@@ -193,34 +189,38 @@ class _MainAppState extends State<MainApp> {
     }
   }
 
-  // Abre uma página como nova rota, preservando a tela anterior na pilha.
+  // Adiciona a página escolhida à navegação para que o usuário possa voltar depois.
   void _navegarParaPagina(Widget pagina) {
     _navigatorKey.currentState?.push(
       MaterialPageRoute(builder: (context) => pagina),
     );
   }
 
-  // Monta o carrossel e trata os estados de erro, carregamento e sucesso.
-  // O widget usa FutureBuilder para renderizar a lista de personagens somente após o JSON ser lido.
-  // Essa forma é a mais simples para lidar com dados assíncronos em Flutter.
+  // Monta o carrossel e mostra uma mensagem adequada enquanto os dados chegam.
   Widget _construirCarrosselPersonagens() {
+    // FutureBuilder redesenha esta parte quando a leitura do elenco termina.
     return FutureBuilder<List<Personagem>>(
       future: _personagensFuture,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          // A leitura falhou: mostra uma mensagem no lugar do carrossel.
           return const Text('Não foi possível carregar os personagens.');
         }
         if (!snapshot.hasData) {
+          // A leitura ainda está em andamento: mostra um indicador de espera.
           return const Center(child: CircularProgressIndicator());
         }
 
-        // Com os dados disponíveis, cria controles e páginas do carrossel.
+        // A partir daqui os personagens estão prontos para aparecer na tela.
         final personagens = snapshot.data!;
+        // Coloca os botões, as páginas do carrossel e o contador em coluna.
         return Column(
           children: [
+            // Mantém uma seta de cada lado e o personagem no espaço central.
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Toca para voltar ao personagem anterior.
                 IconButton(
                   icon: const Icon(
                     Icons.arrow_back_ios,
@@ -229,26 +229,30 @@ class _MainAppState extends State<MainApp> {
                   ),
                   onPressed: _personagemAnterior,
                 ),
+                // Usa o espaço restante para mostrar o carrossel.
                 Expanded(
                   child: SizedBox(
                     height: 280,
+                    // PageView permite trocar de personagem também deslizando o dedo.
                     child: PageView.builder(
                       controller: _pageController,
                       itemCount: personagens.length,
                       onPageChanged: (index) {
-                        // Sincroniza o contador com a página selecionada.
+                        // Atualiza o contador quando o usuário muda de página.
                         setState(() {
                           _indicePersonagemAtual = index;
                         });
                       },
                       itemBuilder: (context, index) {
-                        // Cada página mostra a imagem e o nome do personagem.
+                        // Cria o conteúdo de cada página usando os dados do personagem.
                         final personagem = personagens[index];
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            // Mostra a foto ou a imagem padrão se a foto não abrir.
                             construirCardImagem(personagem.imagem),
                             const SizedBox(height: 12),
+                            // Mostra o nome do personagem selecionado.
                             Text(
                               personagem.nome,
                               style: const TextStyle(
@@ -264,6 +268,7 @@ class _MainAppState extends State<MainApp> {
                     ),
                   ),
                 ),
+                // Toca para avançar ao próximo personagem.
                 IconButton(
                   icon: const Icon(
                     Icons.arrow_forward_ios,
@@ -274,6 +279,7 @@ class _MainAppState extends State<MainApp> {
                 ),
               ],
             ),
+            // Informa a posição atual e o total de personagens, por exemplo, "2 de 8".
             Center(
               child: Text(
                 '${_indicePersonagemAtual + 1} de ${personagens.length}',
@@ -286,8 +292,7 @@ class _MainAppState extends State<MainApp> {
     );
   }
 
-  // Libera recursos associados aos controladores quando a tela é removida.
-  // Essa etapa evita vazamento de memória e garante que os objetos de rolagem sejam encerrados corretamente.
+  // Fecha os controllers ao sair da tela para liberar os recursos usados por eles.
   @override
   void dispose() {
     _scrollController.dispose();
@@ -297,9 +302,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Configura o tema visual do aplicativo, a navegação global e a estrutura da tela principal.
-    // É aqui que a interface de abertura do app é montada com o cabeçalho, menu e seções internas.
-    // MaterialApp é o ponto de entrada para a árvore do Material Design e define o tema central do app.
+    // MaterialApp configura as cores, a navegação e a tela inicial do aplicativo.
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
@@ -308,15 +311,18 @@ class _MainAppState extends State<MainApp> {
         scaffoldBackgroundColor: roxoClaro,
         useMaterial3: true,
       ),
+      // Define o conteúdo exibido quando o aplicativo é aberto.
       home: Container(
         color: Colors.grey,
+        // Centraliza a tela principal no espaço disponível.
         child: Center(
           child: SizedBox(
             width: 450,
+            // Scaffold separa a barra superior do conteúdo que pode rolar.
             child: Scaffold(
               backgroundColor: roxoClaro,
+              // AppBar mostra o nome do aplicativo e os atalhos das outras páginas.
               appBar: AppBar(
-                // Cabeçalho principal do app, com nome do projeto e menu de acesso rápido.
                 backgroundColor: roxoEscuro,
                 centerTitle: true,
                 title: const Text(
@@ -328,14 +334,16 @@ class _MainAppState extends State<MainApp> {
                   ),
                 ),
                 bottom: PreferredSize(
-                  // Mantém os atalhos de navegação acessíveis em telas estreitas.
-                  // Esse menu horizontal funciona como atalho para as páginas internas do app.
+                  // Reserva espaço para o menu que fica logo abaixo do nome do app.
                   preferredSize: const Size.fromHeight(50.0),
+                  // Permite deslizar o menu para o lado em telas estreitas.
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
+                    // Coloca os botões de navegação em uma única linha.
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // Cada botão abre uma página e mantém a tela atual para voltar.
                         TextButton(
                           onPressed: () =>
                               _navegarParaPagina(const HistoriaPage()),
@@ -381,14 +389,14 @@ class _MainAppState extends State<MainApp> {
                   ),
                 ),
               ),
+              // Permite rolar todo o conteúdo da página inicial para baixo.
               body: SingleChildScrollView(
-                // Permite a rolagem da home em dispositivos com pouca altura de tela.
                 controller: _scrollController,
+                // Empilha as seções da página inicial uma abaixo da outra.
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    // Agrupa o conteúdo da página inicial em um painel visual.
-                    // Esse container centraliza as seções principais em um bloco roxo com sombra e bordas arredondadas.
+                    // Reúne as seções dentro de um painel com fundo roxo e sombra.
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 15),
                       padding: const EdgeInsets.all(20),
@@ -403,13 +411,15 @@ class _MainAppState extends State<MainApp> {
                           ),
                         ],
                       ),
+                      // Organiza o logotipo e as seções na ordem em que aparecem.
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Imagem de marca com camada escura.
+                          // Stack coloca uma camada escura sobre o logotipo.
                           Stack(
                             alignment: Alignment.center,
                             children: [
+                              // Mostra o logotipo com bordas arredondadas.
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(16.0),
                                 child: Image.asset(
@@ -419,6 +429,7 @@ class _MainAppState extends State<MainApp> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
+                              // Camada transparente que escurece a imagem de fundo.
                               Container(
                                 height: 200,
                                 decoration: BoxDecoration(
@@ -430,7 +441,7 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 25),
 
-                          // Resumo da história com acesso à página completa.
+                          // Seção de história: título, imagem e botão para abrir a página.
                           Column(
                             key: _secaoHistoriaKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,9 +456,10 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // Imagem ilustrativa da seção de história.
+                              // Imagem ilustrativa da história.
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
+                                // Exibe a imagem ilustrativa ocupando a largura da seção.
                                 child: Image.asset(
                                   'img/logoelixir.png',
                                   height: 200,
@@ -482,9 +494,10 @@ class _MainAppState extends State<MainApp> {
                               ),
                             ],
                           ),
+                          // Mantém distância visual entre a história e o elenco.
                           const SizedBox(height: 30),
 
-                          // Carrossel resumido com acesso ao elenco completo.
+                          // Seção de personagens: mostra o carrossel carregado do JSON.
                           Column(
                             key: _secaoElencoKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,9 +514,10 @@ class _MainAppState extends State<MainApp> {
                               _construirCarrosselPersonagens(),
                             ],
                           ),
+                          // Separa o elenco da apresentação do mascote.
                           const SizedBox(height: 30),
 
-                          // Resumo do mascote com acesso à página de detalhes.
+                          // Seção do mascote: imagem e botão para ler sua descrição completa.
                           Column(
                             key: _secaoCuriosidadesKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -518,9 +532,10 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // Imagem ilustrativa do mascote na página inicial.
+                              // Imagem ilustrativa do mascote.
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
+                                // Exibe a imagem do mascote na largura da seção.
                                 child: Image.asset(
                                   'img/logoelixir.png',
                                   height: 200,
@@ -555,9 +570,10 @@ class _MainAppState extends State<MainApp> {
                               ),
                             ],
                           ),
+                          // Separa a seção do mascote da apresentação do projeto.
                           const SizedBox(height: 30),
 
-                          // Resumo visual do projeto com botão para mais detalhes.
+                          // Seção do projeto: imagem e botão para abrir a apresentação completa.
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -600,9 +616,10 @@ class _MainAppState extends State<MainApp> {
                               ),
                             ],
                           ),
+                          // Separa o projeto da apresentação da equipe.
                           const SizedBox(height: 30),
 
-                          // Chamada visual para conhecer a equipe de desenvolvimento.
+                          // Seção da equipe: imagem e botão para ver os integrantes.
                           Column(
                             key: _secaoRapazesKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -617,7 +634,7 @@ class _MainAppState extends State<MainApp> {
                               ),
                               const SizedBox(height: 12),
 
-                              // Imagem de apresentação da equipe na página inicial.
+                              // Imagem de apresentação da equipe.
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
@@ -654,6 +671,7 @@ class _MainAppState extends State<MainApp> {
                               ),
                             ],
                           ),
+                          // Cria espaço ao final do painel da página inicial.
                           const SizedBox(height: 20),
                         ],
                       ),
@@ -670,22 +688,24 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-/// Renderiza uma imagem local ou remota com dimensões e recorte configuráveis.
-/// Usa o logotipo como alternativa quando o caminho está vazio ou falha.
-/// Esse helper padroniza a exibição de fotos em telas diferentes, evitando repetição de lógica visual.
+/// Mostra uma imagem da internet ou dos arquivos do aplicativo.
+/// Se o caminho estiver vazio ou a imagem não abrir, mostra o logotipo no lugar.
+/// Este widget é usado em mais de uma tela para manter o mesmo tamanho e acabamento.
 Widget construirCardImagem(
   String? path, {
   double width = double.infinity,
   double height = 200,
   BoxFit fit = BoxFit.contain,
 }) {
-  // Distingue endereços web de caminhos de assets incluídos no aplicativo.
+  // Se o caminho começa com http, a imagem vem da internet.
   final imagemValida =
       path != null &&
       path.trim().isNotEmpty &&
       (path.startsWith('http://') || path.startsWith('https://'));
+  // Um caminho preenchido que não é uma URL será tratado como imagem local do app.
   final assetValido = path != null && path.trim().isNotEmpty;
 
+  // O Container cria sombra em volta da imagem para destacá-la do fundo.
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20.0),
@@ -698,9 +718,11 @@ Widget construirCardImagem(
         ),
       ],
     ),
+    // ClipRRect corta a imagem para que ela respeite os cantos arredondados.
     child: ClipRRect(
       borderRadius: BorderRadius.circular(20.0),
       child: imagemValida
+          // Image.network abre imagens que estão em um endereço da internet.
           ? Image.network(
               path,
               width: width,
@@ -708,6 +730,7 @@ Widget construirCardImagem(
               fit: fit,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
+                // Enquanto a imagem baixa, o logotipo evita deixar o espaço vazio.
                 return Image.asset(
                   'img/logoelixir.png',
                   width: width,
@@ -715,6 +738,7 @@ Widget construirCardImagem(
                   fit: BoxFit.contain,
                 );
               },
+              // Se o endereço remoto falhar, usa o logotipo como imagem alternativa.
               errorBuilder: (context, error, stackTrace) => Image.asset(
                 'img/logoelixir.png',
                 width: width,
@@ -723,12 +747,13 @@ Widget construirCardImagem(
               ),
             )
           : assetValido
+          // Image.asset abre uma imagem que foi incluída nos arquivos do aplicativo.
           ? Image.asset(
               path,
               width: width,
               height: height,
               fit: fit,
-              // serve para selecionar uma imagem alternativa caso o asset não seja encontrado.
+              // Se o caminho local não existir, mostra o logotipo no lugar.
               errorBuilder: (context, error, stackTrace) => Image.asset(
                 'img/logoelixir.png',
                 width: width,
@@ -737,6 +762,7 @@ Widget construirCardImagem(
               ),
             )
           : Image.asset(
+              // Quando não há caminho informado, o logotipo é a imagem padrão.
               'img/logoelixir.png',
               width: width,
               height: height,
@@ -746,25 +772,55 @@ Widget construirCardImagem(
   );
 }
 
-/// Página de história, preenchida no layout reutilizável de detalhes.
+/// Carrega a história do JSON e mostra o texto no layout de detalhes.
 class HistoriaPage extends StatelessWidget {
   const HistoriaPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Mantém o texto e a imagem da história centralizados em um único layout.
-    return const PaginaDetalhes(
-      titulo: 'História',
-      imagem: 'img/logoelixir.png',
-      texto:
-          'Wayne Szalinski é um inventor que trabalha em uma máquina capaz de encolher objetos. Durante uma experiência no sótão, uma bola de beisebol atravessa a janela e aciona acidentalmente o equipamento. O raio atinge Amy e Nick Szalinski e os vizinhos Russ Jr. e Ron Thompson, reduzindo as quatro crianças a poucos centímetros de altura. Como Wayne e Diane não percebem o acidente, as crianças acabam no lixo e são levadas para o quintal, que passa a parecer uma enorme selva. Perdidos entre folhas de grama, gotas de água e objetos gigantes, eles precisam encontrar o caminho de volta para casa. No percurso, enfrentam os aspersores, uma abelha e outros perigos, além de fazer amizade com uma formiga que chamam de Antie. Quando um escorpião ameaça o grupo, Antie tenta protegê-los e acaba morrendo. Enquanto isso, Wayne e Diane procuram pelos filhos e descobrem que a máquina foi ativada pela bola de beisebol. Com a ajuda do cachorro Quark, as crianças conseguem chamar a atenção dos pais. Wayne reconstrói o funcionamento da máquina e devolve todos ao tamanho normal.',
-      itens: [],
+    // Espera o conteúdo do JSON sem bloquear a tela inteira.
+    return FutureBuilder<ConteudoApp>(
+      future: carregarConteudo(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          // Quando os dados chegam, usa apenas a seção de história.
+          final historia = snapshot.data!.historia;
+          return PaginaDetalhes(
+            titulo: historia.titulo,
+            imagem: historia.imagem,
+            texto: historia.texto,
+            itens: historia.itens,
+          );
+        }
+
+        // Enquanto carrega ou se houver erro, mostra uma tela simples com o estado.
+        return Scaffold(
+          backgroundColor: roxoClaro,
+          appBar: AppBar(
+            backgroundColor: roxoEscuro,
+            centerTitle: true,
+            title: const Text(
+              'História',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          body: Center(
+            // Mostra a mensagem de erro ou, enquanto isso, um indicador de espera.
+            child: snapshot.hasError
+                ? const Text('Não foi possível carregar a história.')
+                : const CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 }
 
-/// Página dedicada que apresenta o elenco completo em uma lista rolável.
-/// Esta tela é uma versão ampliada do carrossel, exibindo cada personagem em um cartão próprio.
+/// Carrega o elenco e apresenta cada personagem em um cartão rolável.
 class PersonagensPage extends StatefulWidget {
   const PersonagensPage({super.key});
 
@@ -773,16 +829,18 @@ class PersonagensPage extends StatefulWidget {
 }
 
 class _PersonagensPageState extends State<PersonagensPage> {
-  // Inicia a leitura compartilhada do JSON ao criar o estado da página.
+  // Inicia a leitura uma vez e reutiliza o resultado durante a vida desta tela.
   final Future<List<Personagem>> _personagensFuture = carregarPersonagens();
 
   @override
   Widget build(BuildContext context) {
+    // Fundo claro e área central limitam a largura da página em telas grandes.
     return Container(
       color: roxoClaro,
       child: Center(
         child: SizedBox(
           width: 450,
+          // Scaffold fornece a barra superior e o espaço para a lista.
           child: Scaffold(
             backgroundColor: roxoClaro,
             appBar: AppBar(
@@ -791,27 +849,28 @@ class _PersonagensPageState extends State<PersonagensPage> {
               foregroundColor: Colors.white,
               title: const Text('Personagens'),
             ),
+            // A lista só é criada depois que os dados do elenco forem carregados.
             body: FutureBuilder<List<Personagem>>(
               future: _personagensFuture,
               builder: (context, snapshot) {
-                // Informa ao usuário quando não foi possível ler o elenco.
                 if (snapshot.hasError) {
+                  // Avisa se o arquivo do elenco não puder ser aberto.
                   return const Center(
                     child: Text('Não foi possível carregar os personagens.'),
                   );
                 }
-                // Exibe indicador enquanto o asset JSON ainda está sendo lido.
                 if (!snapshot.hasData) {
+                  // Mostra que o aplicativo ainda está lendo o arquivo.
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                // Exibe um cartão por personagem assim que os dados chegam.
+                // ListView permite rolar pela lista quando há muitos personagens.
                 final personagens = snapshot.data!;
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
+                    // Cria um cartão para cada personagem recebido do JSON.
                     for (final personagem in personagens)
-                      // Cartão com foto à esquerda e dados textuais à direita.
                       Container(
                         margin: const EdgeInsets.only(bottom: 14),
                         padding: const EdgeInsets.all(14),
@@ -826,8 +885,10 @@ class _PersonagensPageState extends State<PersonagensPage> {
                             ),
                           ],
                         ),
+                        // A linha coloca o retrato ao lado do nome e da descrição.
                         child: Row(
                           children: [
+                            // Mantém o retrato dentro de uma área com tamanho fixo.
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: SizedBox(
@@ -842,6 +903,7 @@ class _PersonagensPageState extends State<PersonagensPage> {
                               ),
                             ),
                             const SizedBox(width: 14),
+                            // Expanded usa o espaço restante para os textos do cartão.
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -880,26 +942,28 @@ class _PersonagensPageState extends State<PersonagensPage> {
   }
 }
 
-/// Página de detalhes do mascote usando o layout compartilhado.
-/// Esse widget lê o texto do mascote do arquivo .txt e reutiliza a estrutura visual da página de detalhes.
-/// A ideia é manter o conteúdo textual e a formatação da interface em um único padrão.
+/// Carrega os dados do mascote e mostra o texto no layout de detalhes.
 class MascotePage extends StatelessWidget {
   const MascotePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: carregarTextoMascote(),
+    // Usa os mesmos dados carregados para as outras páginas de conteúdo.
+    return FutureBuilder<ConteudoApp>(
+      future: carregarConteudo(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          // Seleciona título, imagem e texto próprios da página do mascote.
+          final mascote = snapshot.data!.mascote;
           return PaginaDetalhes(
-            titulo: 'Mascote',
-            imagem: 'img/mascote.png',
-            texto: snapshot.data!,
-            itens: const [],
+            titulo: mascote.titulo,
+            imagem: mascote.imagem,
+            texto: mascote.texto,
+            itens: mascote.itens,
           );
         }
 
+        // Mostra a barra superior enquanto o conteúdo é carregado ou se ocorrer erro.
         return Scaffold(
           backgroundColor: roxoClaro,
           appBar: AppBar(
@@ -915,6 +979,7 @@ class MascotePage extends StatelessWidget {
             ),
           ),
           body: Center(
+            // Troca o indicador pela mensagem caso a leitura do JSON falhe.
             child: snapshot.hasError
                 ? const Text('Não foi possível carregar o texto do mascote.')
                 : const CircularProgressIndicator(),
@@ -925,19 +990,19 @@ class MascotePage extends StatelessWidget {
   }
 }
 
-/// Página de detalhes que resume a proposta do projeto.
-/// O conteúdo desse widget é carregado de um JSON específico e exibido em um layout padrão.
-/// O FutureBuilder faz a ponte entre o conteúdo dinâmico e a renderização da tela.
+/// Carrega os dados do projeto e mostra sua apresentação no layout de detalhes.
 class ProjetoPage extends StatelessWidget {
   const ProjetoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Projeto>(
-      future: carregarProjeto(),
+    // Espera o conteúdo do JSON e atualiza a tela quando ele estiver disponível.
+    return FutureBuilder<ConteudoApp>(
+      future: carregarConteudo(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final projeto = snapshot.data!;
+          // Usa apenas a seção de projeto, sem misturar os textos das outras páginas.
+          final projeto = snapshot.data!.projeto;
           return PaginaDetalhes(
             titulo: projeto.titulo,
             imagem: projeto.imagem,
@@ -946,6 +1011,7 @@ class ProjetoPage extends StatelessWidget {
           );
         }
 
+        // Enquanto espera, mantém o título da página visível e informa o estado.
         return Scaffold(
           backgroundColor: roxoClaro,
           appBar: AppBar(
@@ -961,6 +1027,7 @@ class ProjetoPage extends StatelessWidget {
             ),
           ),
           body: Center(
+            // Exibe uma mensagem se falhar ou um indicador enquanto ainda carrega.
             child: snapshot.hasError
                 ? const Text('Não foi possível carregar o conteúdo do projeto.')
                 : const CircularProgressIndicator(),
@@ -971,15 +1038,13 @@ class ProjetoPage extends StatelessWidget {
   }
 }
 
-/// Página que apresenta os integrantes e suas responsabilidades no projeto.
-/// A tela usa uma lista fixa de membros com foto, nome e descrição, montando um painel de equipe visual.
-/// É um exemplo de tela sem carregamento assíncrono: todos os dados estão embutidos nessa própria classe.
+/// Apresenta os integrantes da equipe, suas fotos e suas responsabilidades.
 class EquipePage extends StatelessWidget {
   const EquipePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Dados locais dos integrantes: nome, função e caminho da respectiva foto.
+    // Cada registro reúne o nome, a descrição e o caminho da foto de um integrante.
     const membros = [
       (
         nome: 'Rihan de Jesus',
@@ -1008,11 +1073,13 @@ class EquipePage extends StatelessWidget {
       ),
     ];
 
+    // Centraliza a página e mantém a mesma largura usada nas outras telas.
     return Container(
       color: roxoClaro,
       child: Center(
         child: SizedBox(
           width: 450,
+          // Scaffold organiza o título da página e a lista de integrantes.
           child: Scaffold(
             backgroundColor: roxoClaro,
             appBar: AppBar(
@@ -1028,10 +1095,11 @@ class EquipePage extends StatelessWidget {
               ),
               foregroundColor: Colors.white,
             ),
+            // A lista inteira pode rolar, incluindo o botão de voltar no final.
             body: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                // Cada integrante recebe um cartão com retrato e descrição.
+                // Desenha um cartão para cada integrante da equipe.
                 for (final membro in membros)
                   Container(
                     margin: const EdgeInsets.only(bottom: 14),
@@ -1047,8 +1115,10 @@ class EquipePage extends StatelessWidget {
                         ),
                       ],
                     ),
+                    // Coloca a foto de um lado e as informações do outro.
                     child: Row(
                       children: [
+                        // Arredonda a foto e informa o nome para acessibilidade.
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.asset(
@@ -1060,6 +1130,7 @@ class EquipePage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 14),
+                        // Usa o espaço restante para mostrar nome e responsabilidade.
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1088,6 +1159,7 @@ class EquipePage extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(height: 4),
+                // Fecha a tela e retorna à página que estava aberta antes.
                 ElevatedButton.icon(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(Icons.arrow_back),
@@ -1107,12 +1179,9 @@ class EquipePage extends StatelessWidget {
   }
 }
 
-/// Layout comum às páginas de história, mascote e projeto.
-/// Recebe título, imagem, texto principal e uma lista opcional de destaques.
-/// Esse widget centraliza a apresentação visual das páginas de conteúdo, reduzindo duplicação de código.
-/// Ele funciona como um template reutilizável para qualquer página de conteúdo textual do projeto.
+/// Monta a estrutura visual compartilhada pelas páginas de conteúdo.
+/// Recebe título, imagem, texto e destaques; a lista de destaques pode estar vazia.
 class PaginaDetalhes extends StatelessWidget {
-  // Conteúdo variável que cada página injeta no layout compartilhado.
   final String titulo;
   final String imagem;
   final String texto;
@@ -1128,14 +1197,16 @@ class PaginaDetalhes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Organiza o conteúdo em uma página rolável para acomodar textos longos.
+    // Centraliza o conteúdo e limita a largura para facilitar a leitura.
     return Container(
       color: roxoClaro,
       child: Center(
         child: SizedBox(
           width: 450,
+          // Scaffold separa a barra com o título do conteúdo rolável.
           child: Scaffold(
             backgroundColor: roxoClaro,
+            // A barra superior repete o nome da página que está sendo exibida.
             appBar: AppBar(
               backgroundColor: roxoEscuro,
               centerTitle: true,
@@ -1149,10 +1220,13 @@ class PaginaDetalhes extends StatelessWidget {
               ),
               foregroundColor: Colors.white,
             ),
+            // Permite rolar até o fim quando o texto da página é comprido.
             body: SingleChildScrollView(
+              // Organiza imagem, título, texto, destaques e botão em coluna.
               child: Column(
                 children: [
                   const SizedBox(height: 20),
+                  // Painel roxo reúne o conteúdo principal da página.
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 15),
                     padding: const EdgeInsets.all(20),
@@ -1167,9 +1241,11 @@ class PaginaDetalhes extends StatelessWidget {
                         ),
                       ],
                     ),
+                    // Alinha a imagem e os textos pela margem esquerda do painel.
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Mostra a imagem principal recebida pela página.
                         ClipRRect(
                           borderRadius: BorderRadius.circular(16),
                           child: Image.asset(
@@ -1189,6 +1265,7 @@ class PaginaDetalhes extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 14),
+                        // Mostra o texto recebido; os parágrafos vêm separados por linhas.
                         Text(
                           texto,
                           style: const TextStyle(
@@ -1198,8 +1275,8 @@ class PaginaDetalhes extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 22),
+                        // Cria uma linha com estrela para cada destaque, se houver algum.
                         ...itens.map(
-                          // Apresenta cada destaque como uma linha com ícone.
                           (item) => Padding(
                             padding: const EdgeInsets.only(bottom: 14),
                             child: Row(
@@ -1222,6 +1299,7 @@ class PaginaDetalhes extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 12),
+                        // Volta para a página anterior quando o usuário toca no botão.
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
