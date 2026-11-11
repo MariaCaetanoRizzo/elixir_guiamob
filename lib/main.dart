@@ -57,10 +57,14 @@ class ConteudoPagina {
     required this.imagem,
     required this.paragrafos,
     required this.itens,
+    this.imagemComplementar,
+    this.descricaoComplementar,
   });
 
   final String titulo; // Texto que aparece no topo e no conteúdo da página.
   final String imagem; // Imagem principal mostrada antes do texto.
+  final String? imagemComplementar;
+  final String? descricaoComplementar;
   final List<String>
   paragrafos; // Partes do texto, separadas para facilitar a leitura.
   final List<String> itens; // Lista opcional de destaques abaixo do texto.
@@ -75,6 +79,8 @@ class ConteudoPagina {
       imagem: json['imagem'] as String,
       paragrafos: List<String>.from(json['paragrafos'] as List<dynamic>),
       itens: List<String>.from(json['itens'] as List<dynamic>? ?? const []),
+      imagemComplementar: json['imagemComplementar'] as String?,
+      descricaoComplementar: json['descricaoComplementar'] as String?,
     );
   }
 }
@@ -256,6 +262,7 @@ class _MainAppState extends State<MainApp> {
                             Text(
                               personagem.nome,
                               style: const TextStyle(
+                                fontFamily: 'Redact',
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -309,6 +316,15 @@ class _MainAppState extends State<MainApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: roxoElixir),
         scaffoldBackgroundColor: roxoClaro,
+        fontFamily: 'MomoTrust',
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: 'Redact',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         useMaterial3: true,
       ),
       // Define o conteúdo exibido quando o aplicativo é aberto.
@@ -328,6 +344,7 @@ class _MainAppState extends State<MainApp> {
                 title: const Text(
                   'Elixir Corp',
                   style: TextStyle(
+                    fontFamily: 'Redact',
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(228, 222, 222, 1),
@@ -449,6 +466,7 @@ class _MainAppState extends State<MainApp> {
                               const Text(
                                 'História',
                                 style: TextStyle(
+                                  fontFamily: 'Redact',
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -505,6 +523,7 @@ class _MainAppState extends State<MainApp> {
                               const Text(
                                 'Personagens',
                                 style: TextStyle(
+                                  fontFamily: 'Redact',
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -525,6 +544,7 @@ class _MainAppState extends State<MainApp> {
                               const Text(
                                 'Mascote',
                                 style: TextStyle(
+                                  fontFamily: 'Redact',
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -580,6 +600,7 @@ class _MainAppState extends State<MainApp> {
                               const Text(
                                 'Projeto',
                                 style: TextStyle(
+                                  fontFamily: 'Redact',
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -627,6 +648,7 @@ class _MainAppState extends State<MainApp> {
                               const Text(
                                 'Equipe de desenvolvimento',
                                 style: TextStyle(
+                                  fontFamily: 'Redact',
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -911,6 +933,7 @@ class _PersonagensPageState extends State<PersonagensPage> {
                                   Text(
                                     personagem.nome,
                                     style: const TextStyle(
+                                      fontFamily: 'Redact',
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -960,6 +983,8 @@ class MascotePage extends StatelessWidget {
             imagem: mascote.imagem,
             texto: mascote.texto,
             itens: mascote.itens,
+            imagemComplementar: mascote.imagemComplementar,
+            descricaoComplementar: mascote.descricaoComplementar,
           );
         }
 
@@ -1138,6 +1163,7 @@ class EquipePage extends StatelessWidget {
                               Text(
                                 membro.nome,
                                 style: const TextStyle(
+                                  fontFamily: 'Redact',
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -1186,6 +1212,8 @@ class PaginaDetalhes extends StatelessWidget {
   final String imagem;
   final String texto;
   final List<String> itens;
+  final String? imagemComplementar;
+  final String? descricaoComplementar;
 
   const PaginaDetalhes({
     super.key,
@@ -1193,6 +1221,8 @@ class PaginaDetalhes extends StatelessWidget {
     required this.imagem,
     required this.texto,
     required this.itens,
+    this.imagemComplementar,
+    this.descricaoComplementar,
   });
 
   @override
@@ -1259,6 +1289,7 @@ class PaginaDetalhes extends StatelessWidget {
                         Text(
                           titulo,
                           style: const TextStyle(
+                            fontFamily: 'Redact',
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -1274,6 +1305,43 @@ class PaginaDetalhes extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
+                        if (imagemComplementar != null) ...[
+                          const SizedBox(height: 22),
+                          const Text(
+                            'Logo da Elixir',
+                            style: TextStyle(
+                              fontFamily: 'Redact',
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              height: 170,
+                              padding: const EdgeInsets.all(12),
+                              child: Image.asset(
+                                imagemComplementar!,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          if (descricaoComplementar != null) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              descricaoComplementar!,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                height: 1.5,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ],
                         const SizedBox(height: 22),
                         // Cria uma linha com estrela para cada destaque, se houver algum.
                         ...itens.map(

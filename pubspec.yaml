@@ -21,4 +21,11 @@ flutter:
     - img/
     - img/personagens/
     - json/
+  fonts:
+    - family: MomoTrust
+      fonts:
+        - asset: fontes/MomoTrust.ttf
+    - family: Redact
+      fonts:
+        - asset: fontes/Redact.ttf
  

@@ -13,6 +13,8 @@
   "mascote": {
     "titulo": "Mascote",
     "imagem": "img/mascote.png",
+    "imagemComplementar": "img/logoelixir.png",
+    "descricaoComplementar": "A logo da Elixir combina tons de roxo e formas marcantes para representar criatividade, tecnologia e inovação. Este texto é provisório e pode ser substituído pela explicação oficial.",
     "paragrafos": [
       "1. EXPLICAÇÃO DO MASCOTE",
       "O Slopinho é o, mascote oficial do departamento Elixir, responsável pelo desenvolvimento de soluções de gamificação para empresas contratantes. Seu visual apresenta um personagem de aparência geométrica e estilizada, com predominância de tons de roxo e contornos pretos, transmitindo uma identidade visual descontraída, moderna e amigável.",
