@@ -557,7 +557,7 @@ class _MainAppState extends State<MainApp> {
                                 borderRadius: BorderRadius.circular(12),
                                 // Exibe a imagem do mascote na largura da seção.
                                 child: Image.asset(
-                                  'img/logoelixir.png',
+                                  'img/mascote.png',
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -610,7 +610,7 @@ class _MainAppState extends State<MainApp> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
-                                  'img/logoelixir.png',
+                                  'img/Captura de tela 2026-11-07 092716.png',
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -660,7 +660,7 @@ class _MainAppState extends State<MainApp> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: Image.asset(
-                                  'img/logoelixir.png',
+                                  'img/Captura de tela 2026-11-10 102409.png',
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -1030,9 +1030,11 @@ class ProjetoPage extends StatelessWidget {
           final projeto = snapshot.data!.projeto;
           return PaginaDetalhes(
             titulo: projeto.titulo,
-            imagem: projeto.imagem,
+            imagem: 'img/Captura de tela 2026-10-30 095647.png',
             texto: projeto.texto,
             itens: projeto.itens,
+            imagemComplementar: 'img/sketch cidade.png',
+            tituloImagemComplementar: 'Mapa da cidade',
           );
         }
 
@@ -1213,6 +1215,7 @@ class PaginaDetalhes extends StatelessWidget {
   final String texto;
   final List<String> itens;
   final String? imagemComplementar;
+  final String? tituloImagemComplementar;
   final String? descricaoComplementar;
 
   const PaginaDetalhes({
@@ -1222,6 +1225,7 @@ class PaginaDetalhes extends StatelessWidget {
     required this.texto,
     required this.itens,
     this.imagemComplementar,
+    this.tituloImagemComplementar,
     this.descricaoComplementar,
   });
 
@@ -1307,8 +1311,8 @@ class PaginaDetalhes extends StatelessWidget {
                         ),
                         if (imagemComplementar != null) ...[
                           const SizedBox(height: 22),
-                          const Text(
-                            'Logo da Elixir',
+                          Text(
+                            tituloImagemComplementar ?? 'Logo da Elixir',
                             style: TextStyle(
                               fontFamily: 'Redact',
                               fontSize: 20,
