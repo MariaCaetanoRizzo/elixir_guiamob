@@ -202,6 +202,162 @@ class _MainAppState extends State<MainApp> {
     );
   }
 
+  Widget _construirItemNavegacao(String titulo, IconData icone, Widget pagina) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: InkWell(
+        onTap: () => _navegarParaPagina(pagina),
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.11),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icone, size: 16, color: Colors.white),
+              const SizedBox(width: 6),
+              Text(
+                titulo,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _construirTituloSecao(
+    String titulo,
+    String subtitulo,
+    IconData icone,
+  ) {
+    return Row(
+      children: [
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: roxoClaro,
+            borderRadius: BorderRadius.circular(13),
+          ),
+          child: Icon(icone, color: roxoElixir, size: 21),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                titulo,
+                style: const TextStyle(
+                  fontFamily: 'Redact',
+                  fontSize: 21,
+                  fontWeight: FontWeight.bold,
+                  color: roxoEscuro,
+                ),
+              ),
+              Text(
+                subtitulo,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: roxoEscuro.withValues(alpha: 0.58),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _construirCardImagemSecao(
+    String titulo,
+    String subtitulo,
+    String imagem,
+    IconData icone,
+    Widget pagina,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: roxoElixir.withValues(alpha: 0.07)),
+        boxShadow: [
+          BoxShadow(
+            color: roxoEscuro.withValues(alpha: 0.10),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+            child: _construirTituloSecao(titulo, subtitulo, icone),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  Image.asset(
+                    imagem,
+                    width: double.infinity,
+                    height: 190,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    height: 190,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Color(0xAA35104F)],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 14,
+                    right: 14,
+                    bottom: 14,
+                    child: ElevatedButton.icon(
+                      onPressed: () => _navegarParaPagina(pagina),
+                      icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+                      label: Text('Explorar $titulo'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: roxoEscuro,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
+
   // Monta o carrossel e mostra uma mensagem adequada enquanto os dados chegam.
   Widget _construirCarrosselPersonagens() {
     // FutureBuilder redesenha esta parte quando a leitura do elenco termina.
@@ -329,77 +485,93 @@ class _MainAppState extends State<MainApp> {
       ),
       // Define o conteúdo exibido quando o aplicativo é aberto.
       home: Container(
-        color: Colors.grey,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF20102B), Color(0xFFE9DCF2)],
+          ),
+        ),
         // Centraliza a tela principal no espaço disponível.
         child: Center(
           child: SizedBox(
             width: 450,
             // Scaffold separa a barra superior do conteúdo que pode rolar.
             child: Scaffold(
-              backgroundColor: roxoClaro,
+              backgroundColor: const Color(0xFFF8F5FB),
               // AppBar mostra o nome do aplicativo e os atalhos das outras páginas.
               appBar: AppBar(
+                elevation: 0,
+                scrolledUnderElevation: 0,
                 backgroundColor: roxoEscuro,
-                centerTitle: true,
-                title: const Text(
-                  'Elixir Corp',
-                  style: TextStyle(
-                    fontFamily: 'Redact',
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(228, 222, 222, 1),
-                  ),
+                centerTitle: false,
+                titleSpacing: 18,
+                title: const Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 17,
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage('img/logoelixir.png'),
+                    ),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'ELIXIR',
+                          style: TextStyle(
+                            fontFamily: 'Redact',
+                            fontSize: 18,
+                            letterSpacing: 1.4,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'CORP',
+                          style: TextStyle(
+                            fontSize: 9,
+                            letterSpacing: 4,
+                            color: Color(0xFFDCCAE7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 bottom: PreferredSize(
-                  // Reserva espaço para o menu que fica logo abaixo do nome do app.
-                  preferredSize: const Size.fromHeight(50.0),
-                  // Permite deslizar o menu para o lado em telas estreitas.
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    // Coloca os botões de navegação em uma única linha.
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  preferredSize: const Size.fromHeight(58),
+                  child: Container(
+                    height: 58,
+                    padding: const EdgeInsets.fromLTRB(14, 4, 14, 10),
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
                       children: [
-                        // Cada botão abre uma página e mantém a tela atual para voltar.
-                        TextButton(
-                          onPressed: () =>
-                              _navegarParaPagina(const HistoriaPage()),
-                          child: const Text(
-                            'História',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        _construirItemNavegacao(
+                          'História',
+                          Icons.auto_stories_rounded,
+                          const HistoriaPage(),
                         ),
-                        TextButton(
-                          onPressed: () =>
-                              _navegarParaPagina(const PersonagensPage()),
-                          child: const Text(
-                            'Personagens',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        _construirItemNavegacao(
+                          'Personagens',
+                          Icons.groups_rounded,
+                          const PersonagensPage(),
                         ),
-                        TextButton(
-                          onPressed: () =>
-                              _navegarParaPagina(const MascotePage()),
-                          child: const Text(
-                            'Mascote',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        _construirItemNavegacao(
+                          'Mascote',
+                          Icons.pets_rounded,
+                          const MascotePage(),
                         ),
-                        TextButton(
-                          onPressed: () =>
-                              _navegarParaPagina(const ProjetoPage()),
-                          child: const Text(
-                            'Projeto',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        _construirItemNavegacao(
+                          'Projeto',
+                          Icons.science_rounded,
+                          const ProjetoPage(),
                         ),
-                        TextButton(
-                          onPressed: () =>
-                              _navegarParaPagina(const EquipePage()),
-                          child: const Text(
-                            'Equipe',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        _construirItemNavegacao(
+                          'Equipe',
+                          Icons.handshake_rounded,
+                          const EquipePage(),
                         ),
                       ],
                     ),
@@ -413,18 +585,22 @@ class _MainAppState extends State<MainApp> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    // Reúne as seções dentro de um painel com fundo roxo e sombra.
+                    // Reúne as seções dentro de um painel claro com sombra suave.
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 15),
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: roxoElixir,
-                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: roxoElixir.withValues(alpha: 0.06),
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            color: roxoEscuro.withValues(alpha: 0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
+                            color: roxoEscuro.withValues(alpha: 0.12),
+                            spreadRadius: 0,
+                            blurRadius: 22,
+                            offset: const Offset(0, 10),
                           ),
                         ],
                       ),
@@ -432,269 +608,137 @@ class _MainAppState extends State<MainApp> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Stack coloca uma camada escura sobre o logotipo.
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              // Mostra o logotipo com bordas arredondadas.
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(16.0),
-                                child: Image.asset(
+                          // Hero visual com título sobreposto e acabamento moderno.
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(18),
+                            child: Stack(
+                              alignment: Alignment.bottomLeft,
+                              children: [
+                                Image.asset(
                                   'img/logoelixir.png',
                                   width: double.infinity,
-                                  height: 200,
+                                  height: 220,
                                   fit: BoxFit.cover,
                                 ),
-                              ),
-                              // Camada transparente que escurece a imagem de fundo.
-                              Container(
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.3),
-                                  borderRadius: BorderRadius.circular(16.0),
+                                Container(
+                                  height: 220,
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Color(0x181B0B26),
+                                        Color(0xE62B123A),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
+                                const Positioned(
+                                  left: 18,
+                                  right: 18,
+                                  bottom: 18,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'UM UNIVERSO PARA EXPLORAR',
+                                        style: TextStyle(
+                                          color: Color(0xFFEADCF2),
+                                          fontSize: 10,
+                                          letterSpacing: 2,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Descubra o projeto Elixir',
+                                        style: TextStyle(
+                                          fontFamily: 'Redact',
+                                          color: Colors.white,
+                                          fontSize: 24,
+                                          height: 1.05,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 25),
+                          const SizedBox(height: 18),
 
-                          // Seção de história: título, imagem e botão para abrir a página.
-                          Column(
+                          // Seção de história em cartão visual.
+                          Container(
                             key: _secaoHistoriaKey,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'História',
-                                style: TextStyle(
-                                  fontFamily: 'Redact',
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-
-                              // Imagem ilustrativa da história.
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                // Exibe a imagem ilustrativa ocupando a largura da seção.
-                                child: Image.asset(
-                                  'img/logoelixir.png',
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: roxoBotao,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () =>
-                                      _navegarParaPagina(const HistoriaPage()),
-                                  child: const Text(
-                                    'Ver Mais História',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            child: _construirCardImagemSecao(
+                              'História',
+                              'Conheça os acontecimentos do universo',
+                              'img/logoelixir.png',
+                              Icons.auto_stories_rounded,
+                              const HistoriaPage(),
+                            ),
                           ),
-                          // Mantém distância visual entre a história e o elenco.
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 18),
 
-                          // Seção de personagens: mostra o carrossel carregado do JSON.
-                          Column(
+                          // Seção de personagens em cartão claro.
+                          Container(
                             key: _secaoElencoKey,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Personagens',
-                                style: TextStyle(
-                                  fontFamily: 'Redact',
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF0E7F5),
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: roxoElixir.withValues(alpha: 0.08),
                               ),
-                              const SizedBox(height: 12),
-                              _construirCarrosselPersonagens(),
-                            ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _construirTituloSecao(
+                                  'Personagens',
+                                  'Conheça quem dá vida à história',
+                                  Icons.groups_rounded,
+                                ),
+                                const SizedBox(height: 12),
+                                _construirCarrosselPersonagens(),
+                              ],
+                            ),
                           ),
-                          // Separa o elenco da apresentação do mascote.
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 18),
 
-                          // Seção do mascote: imagem e botão para ler sua descrição completa.
-                          Column(
+                          // Mascote, projeto e equipe em cartões visuais iguais.
+                          Container(
                             key: _secaoCuriosidadesKey,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Mascote',
-                                style: TextStyle(
-                                  fontFamily: 'Redact',
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-
-                              // Imagem ilustrativa do mascote.
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                // Exibe a imagem do mascote na largura da seção.
-                                child: Image.asset(
-                                  'img/mascote.png',
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: roxoBotao,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () =>
-                                      _navegarParaPagina(const MascotePage()),
-                                  child: const Text(
-                                    'Ver Mais Mascote',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            child: _construirCardImagemSecao(
+                              'Mascote',
+                              'O símbolo divertido da Elixir',
+                              'img/mascote.png',
+                              Icons.pets_rounded,
+                              const MascotePage(),
+                            ),
                           ),
-                          // Separa a seção do mascote da apresentação do projeto.
-                          const SizedBox(height: 30),
-
-                          // Seção do projeto: imagem e botão para abrir a apresentação completa.
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Projeto',
-                                style: TextStyle(
-                                  fontFamily: 'Redact',
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset(
-                                  'img/Captura de tela 2026-11-07 092716.png',
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: roxoBotao,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () =>
-                                      _navegarParaPagina(const ProjetoPage()),
-                                  child: const Text('Ver Projeto'),
-                                ),
-                              ),
-                            ],
+                          const SizedBox(height: 18),
+                          _construirCardImagemSecao(
+                            'Projeto',
+                            'Nossa proposta, mapa e desenvolvimento',
+                            'img/Captura de tela 2026-11-07 092716.png',
+                            Icons.science_rounded,
+                            const ProjetoPage(),
                           ),
-                          // Separa o projeto da apresentação da equipe.
-                          const SizedBox(height: 30),
-
-                          // Seção da equipe: imagem e botão para ver os integrantes.
-                          Column(
+                          const SizedBox(height: 18),
+                          Container(
                             key: _secaoRapazesKey,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Equipe de desenvolvimento',
-                                style: TextStyle(
-                                  fontFamily: 'Redact',
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-
-                              // Imagem de apresentação da equipe.
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset(
-                                  'img/Captura de tela 2026-11-10 102409.png',
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: roxoBotao,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () =>
-                                      _navegarParaPagina(const EquipePage()),
-                                  child: const Text(
-                                    'Ver Mais Equipe',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            child: _construirCardImagemSecao(
+                              'Equipe',
+                              'As pessoas por trás do projeto',
+                              'img/Captura de tela 2026-11-10 102409.png',
+                              Icons.handshake_rounded,
+                              const EquipePage(),
+                            ),
                           ),
-                          // Cria espaço ao final do painel da página inicial.
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 4),
                         ],
                       ),
                     ),

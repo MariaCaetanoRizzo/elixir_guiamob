@@ -67,7 +67,7 @@
     "nome": "Clarice Duarte",
     "descricao": " Artista muralista que trabalha em um grande projeto do MURAL",
     "principal": false,
-    "imagem": ""
+    "imagem": "img/personagens/clarice.PNG"
   },
   {
     "id": 12,
@@ -95,7 +95,7 @@
     "nome": "Michel Neves",
     "descricao": " Segurança da CHARLOTT3",
     "principal": false,
-    "imagem": ""
+    "imagem": "img/personagens/michael.PNG"
   },
   {
     "id": 16,
