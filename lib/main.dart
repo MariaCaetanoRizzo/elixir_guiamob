@@ -57,6 +57,7 @@ class ConteudoPagina {
     required this.imagem,
     required this.paragrafos,
     required this.itens,
+    this.figuras = const [],
     this.imagemComplementar,
     this.descricaoComplementar,
   });
@@ -68,6 +69,8 @@ class ConteudoPagina {
   final List<String>
   paragrafos; // Partes do texto, separadas para facilitar a leitura.
   final List<String> itens; // Lista opcional de destaques abaixo do texto.
+  final List<FiguraConteudo>
+  figuras; // Imagens identificadas por legenda e fonte.
 
   // Junta os parágrafos com uma linha em branco entre eles.
   String get texto => paragrafos.join('\n\n');
@@ -79,22 +82,44 @@ class ConteudoPagina {
       imagem: json['imagem'] as String,
       paragrafos: List<String>.from(json['paragrafos'] as List<dynamic>),
       itens: List<String>.from(json['itens'] as List<dynamic>? ?? const []),
+      figuras: (json['figuras'] as List<dynamic>? ?? const [])
+          .map((item) => FiguraConteudo.fromJson(item as Map<String, dynamic>))
+          .toList(),
       imagemComplementar: json['imagemComplementar'] as String?,
       descricaoComplementar: json['descricaoComplementar'] as String?,
     );
   }
 }
 
-/// Agrupa os dados das três páginas que usam conteúdo do arquivo projeto.json.
-class ConteudoApp {
-  const ConteudoApp({
-    required this.historia,
-    required this.mascote,
-    required this.projeto,
+/// Representa uma imagem de apoio com identificação e fonte para a página.
+class FiguraConteudo {
+  const FiguraConteudo({
+    required this.titulo,
+    required this.imagem,
+    required this.fonte,
+    this.aposParagrafo = -1,
   });
 
+  final String titulo;
+  final String imagem;
+  final String fonte;
+  final int aposParagrafo;
+
+  factory FiguraConteudo.fromJson(Map<String, dynamic> json) {
+    return FiguraConteudo(
+      titulo: json['titulo'] as String,
+      imagem: json['imagem'] as String,
+      fonte: json['fonte'] as String,
+      aposParagrafo: json['aposParagrafo'] as int? ?? -1,
+    );
+  }
+}
+
+/// Agrupa os dados das duas páginas que usam conteúdo do arquivo projeto.json.
+class ConteudoApp {
+  const ConteudoApp({required this.historia, required this.projeto});
+
   final ConteudoPagina historia;
-  final ConteudoPagina mascote;
   final ConteudoPagina projeto;
 
   /// Cria cada página a partir da seção com o mesmo nome no JSON.
@@ -103,13 +128,12 @@ class ConteudoApp {
       historia: ConteudoPagina.fromJson(
         json['historia'] as Map<String, dynamic>,
       ),
-      mascote: ConteudoPagina.fromJson(json['mascote'] as Map<String, dynamic>),
       projeto: ConteudoPagina.fromJson(json['projeto'] as Map<String, dynamic>),
     );
   }
 }
 
-// Mantém uma única leitura de projeto.json para História, Mascote e Projeto.
+// Mantém uma única leitura de projeto.json para História e Projeto.
 Future<ConteudoApp>? _conteudoEmCarregamento;
 
 /// Abre projeto.json e converte os dados para o modelo usado pelas telas.
@@ -492,7 +516,6 @@ class _MainAppState extends State<MainApp> {
             colors: [Color(0xFF20102B), Color(0xFFE9DCF2)],
           ),
         ),
-        // Centraliza a tela principal no espaço disponível.
         child: Center(
           child: SizedBox(
             width: 450,
@@ -557,11 +580,6 @@ class _MainAppState extends State<MainApp> {
                           'Personagens',
                           Icons.groups_rounded,
                           const PersonagensPage(),
-                        ),
-                        _construirItemNavegacao(
-                          'Mascote',
-                          Icons.pets_rounded,
-                          const MascotePage(),
                         ),
                         _construirItemNavegacao(
                           'Projeto',
@@ -708,24 +726,16 @@ class _MainAppState extends State<MainApp> {
                           ),
                           const SizedBox(height: 18),
 
-                          // Mascote, projeto e equipe em cartões visuais iguais.
+                          // Projeto e equipe em cartões visuais iguais.
                           Container(
                             key: _secaoCuriosidadesKey,
                             child: _construirCardImagemSecao(
-                              'Mascote',
-                              'O símbolo divertido da Elixir',
-                              'img/mascote.png',
-                              Icons.pets_rounded,
-                              const MascotePage(),
+                              'Projeto',
+                              'Nossa proposta, mapa e desenvolvimento',
+                              'img/Captura de tela 2026-11-07 092716.png',
+                              Icons.science_rounded,
+                              const ProjetoPage(),
                             ),
-                          ),
-                          const SizedBox(height: 18),
-                          _construirCardImagemSecao(
-                            'Projeto',
-                            'Nossa proposta, mapa e desenvolvimento',
-                            'img/Captura de tela 2026-11-07 092716.png',
-                            Icons.science_rounded,
-                            const ProjetoPage(),
                           ),
                           const SizedBox(height: 18),
                           Container(
@@ -855,7 +865,10 @@ class HistoriaPage extends StatelessWidget {
             titulo: historia.titulo,
             imagem: historia.imagem,
             texto: historia.texto,
+            paragrafos: historia.paragrafos,
             itens: historia.itens,
+            figuras: historia.figuras,
+            mostrarImagemPrincipal: false,
           );
         }
 
@@ -933,67 +946,188 @@ class _PersonagensPageState extends State<PersonagensPage> {
                 // ListView permite rolar pela lista quando há muitos personagens.
                 final personagens = snapshot.data!;
                 return ListView(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.fromLTRB(18, 20, 18, 28),
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 18),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: roxoClaro,
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: const Icon(
+                              Icons.groups_rounded,
+                              color: roxoElixir,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Elenco',
+                                  style: TextStyle(
+                                    fontFamily: 'Redact',
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: roxoEscuro,
+                                  ),
+                                ),
+                                Text(
+                                  '${personagens.length} personagens da história',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: roxoEscuro.withValues(alpha: 0.62),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     // Cria um cartão para cada personagem recebido do JSON.
                     for (final personagem in personagens)
                       Container(
-                        margin: const EdgeInsets.only(bottom: 14),
-                        padding: const EdgeInsets.all(14),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: roxoElixir,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: roxoElixir.withValues(alpha: 0.09),
+                          ),
                           boxShadow: [
                             BoxShadow(
-                              color: roxoEscuro.withValues(alpha: 0.2),
-                              blurRadius: 6,
-                              offset: const Offset(0, 3),
+                              color: roxoEscuro.withValues(alpha: 0.06),
+                              blurRadius: 14,
+                              offset: const Offset(0, 5),
                             ),
                           ],
                         ),
-                        // A linha coloca o retrato ao lado do nome e da descrição.
-                        child: Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            // Mantém o retrato dentro de uma área com tamanho fixo.
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
-                                width: 100,
-                                height: 110,
-                                child: construirCardImagem(
-                                  personagem.imagem,
-                                  width: 100,
-                                  height: 110,
-                                  fit: BoxFit.cover,
+                            Row(
+                              children: [
+                                // Mantém o retrato dentro de uma área com tamanho fixo.
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: SizedBox(
+                                    width: 92,
+                                    height: 104,
+                                    child: construirCardImagem(
+                                      personagem.imagem,
+                                      width: 92,
+                                      height: 104,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 14),
+                                // Expanded usa o espaço restante para os textos do cartão.
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        personagem.nome,
+                                        style: const TextStyle(
+                                          fontFamily: 'Redact',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: roxoEscuro,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        personagem.descricao,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          height: 1.4,
+                                          color: roxoEscuro.withValues(
+                                            alpha: 0.76,
+                                          ),
+                                        ),
+                                        textAlign: TextAlign.justify,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            ExpansionTile(
+                              tilePadding: EdgeInsets.zero,
+                              childrenPadding: const EdgeInsets.only(
+                                top: 4,
+                                bottom: 8,
+                              ),
+                              leading: const Icon(
+                                Icons.person_search_rounded,
+                                color: roxoElixir,
+                              ),
+                              title: const Text(
+                                'Saber mais sobre o personagem',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: roxoEscuro,
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 14),
-                            // Expanded usa o espaço restante para os textos do cartão.
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    personagem.nome,
-                                    style: const TextStyle(
-                                      fontFamily: 'Redact',
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                              subtitle: const Text('Ficha e modelo 3D'),
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      personagem.descricao,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        height: 1.5,
+                                        color: roxoEscuro.withValues(
+                                          alpha: 0.82,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    personagem.descricao,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      height: 1.4,
-                                      color: Colors.white,
+                                    const SizedBox(height: 12),
+                                    Container(
+                                      width: double.infinity,
+                                      height: 210,
+                                      decoration: BoxDecoration(
+                                        color: roxoEscuro,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.view_in_ar_rounded,
+                                            size: 42,
+                                            color: Colors.white70,
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            'Modelo 3D de ${personagem.nome}',
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -1005,56 +1139,6 @@ class _PersonagensPageState extends State<PersonagensPage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// Carrega os dados do mascote e mostra o texto no layout de detalhes.
-class MascotePage extends StatelessWidget {
-  const MascotePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Usa os mesmos dados carregados para as outras páginas de conteúdo.
-    return FutureBuilder<ConteudoApp>(
-      future: carregarConteudo(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          // Seleciona título, imagem e texto próprios da página do mascote.
-          final mascote = snapshot.data!.mascote;
-          return PaginaDetalhes(
-            titulo: mascote.titulo,
-            imagem: mascote.imagem,
-            texto: mascote.texto,
-            itens: mascote.itens,
-            imagemComplementar: mascote.imagemComplementar,
-            descricaoComplementar: mascote.descricaoComplementar,
-          );
-        }
-
-        // Mostra a barra superior enquanto o conteúdo é carregado ou se ocorrer erro.
-        return Scaffold(
-          backgroundColor: roxoClaro,
-          appBar: AppBar(
-            backgroundColor: roxoEscuro,
-            centerTitle: true,
-            title: const Text(
-              'Mascote',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          body: Center(
-            // Troca o indicador pela mensagem caso a leitura do JSON falhe.
-            child: snapshot.hasError
-                ? const Text('Não foi possível carregar o texto do mascote.')
-                : const CircularProgressIndicator(),
-          ),
-        );
-      },
     );
   }
 }
@@ -1168,21 +1252,63 @@ class EquipePage extends StatelessWidget {
             ),
             // A lista inteira pode rolar, incluindo o botão de voltar no final.
             body: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(18, 20, 18, 28),
               children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 18),
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: roxoElixir.withValues(alpha: 0.09),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 46,
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: roxoClaro,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Icon(
+                          Icons.handshake_rounded,
+                          color: roxoElixir,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Text(
+                          'As pessoas por trás do projeto',
+                          style: TextStyle(
+                            fontFamily: 'Redact',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: roxoEscuro,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 // Desenha um cartão para cada integrante da equipe.
                 for (final membro in membros)
                   Container(
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(14),
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: roxoElixir,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: roxoElixir.withValues(alpha: 0.09),
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: roxoEscuro.withValues(alpha: 0.2),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
+                          color: roxoEscuro.withValues(alpha: 0.06),
+                          blurRadius: 14,
+                          offset: const Offset(0, 5),
                         ),
                       ],
                     ),
@@ -1191,13 +1317,20 @@ class EquipePage extends StatelessWidget {
                       children: [
                         // Arredonda a foto e informa o nome para acessibilidade.
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(12),
                           child: Image.asset(
                             membro.imagem,
-                            width: 100,
-                            height: 110,
+                            width: 92,
+                            height: 104,
                             fit: BoxFit.cover,
                             semanticLabel: membro.nome,
+                            errorBuilder: (context, error, stackTrace) =>
+                                construirCardImagem(
+                                  '',
+                                  width: 92,
+                                  height: 104,
+                                  fit: BoxFit.cover,
+                                ),
                           ),
                         ),
                         const SizedBox(width: 14),
@@ -1210,19 +1343,21 @@ class EquipePage extends StatelessWidget {
                                 membro.nome,
                                 style: const TextStyle(
                                   fontFamily: 'Redact',
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: roxoEscuro,
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 5),
                               Text(
                                 membro.descricao,
-                                style: const TextStyle(
-                                  fontSize: 15,
+                                style: TextStyle(
+                                  fontSize: 13,
                                   height: 1.4,
-                                  color: Colors.white,
+                                  color: roxoEscuro.withValues(alpha: 0.76),
                                 ),
+                                // Mantém os parágrafos alinhados nas telas estreitas.
+                                textAlign: TextAlign.justify,
                               ),
                             ],
                           ),
@@ -1257,7 +1392,10 @@ class PaginaDetalhes extends StatelessWidget {
   final String titulo;
   final String imagem;
   final String texto;
+  final List<String>? paragrafos;
   final List<String> itens;
+  final List<FiguraConteudo> figuras;
+  final bool mostrarImagemPrincipal;
   final String? imagemComplementar;
   final String? tituloImagemComplementar;
   final String? descricaoComplementar;
@@ -1268,22 +1406,73 @@ class PaginaDetalhes extends StatelessWidget {
     required this.imagem,
     required this.texto,
     required this.itens,
+    this.paragrafos,
+    this.figuras = const [],
+    this.mostrarImagemPrincipal = true,
     this.imagemComplementar,
     this.tituloImagemComplementar,
     this.descricaoComplementar,
   });
 
+  bool _ehTituloDeSecao(String texto) {
+    return RegExp(r'^\d+(\.\d+)*\.?\s+[A-ZÁÉÍÓÚÂÊÔÃÕÇ]').hasMatch(texto);
+  }
+
+  Widget _construirFigura(FiguraConteudo figura) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 22),
+        Text(
+          figura.titulo,
+          style: const TextStyle(
+            fontSize: 13,
+            height: 1.4,
+            fontWeight: FontWeight.w700,
+            color: roxoEscuro,
+          ),
+          textAlign: TextAlign.justify,
+        ),
+        const SizedBox(height: 10),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(14),
+          child: Image.asset(
+            figura.imagem,
+            width: double.infinity,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const SizedBox.shrink(),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          figura.fonte,
+          style: TextStyle(
+            fontSize: 12,
+            color: roxoEscuro.withValues(alpha: 0.62),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Centraliza o conteúdo e limita a largura para facilitar a leitura.
     return Container(
-      color: roxoClaro,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF20102B), Color(0xFFE9DCF2)],
+        ),
+      ),
       child: Center(
         child: SizedBox(
           width: 450,
           // Scaffold separa a barra com o título do conteúdo rolável.
           child: Scaffold(
-            backgroundColor: roxoClaro,
+            backgroundColor: const Color(0xFFF7F5F9),
             // A barra superior repete o nome da página que está sendo exibida.
             appBar: AppBar(
               backgroundColor: roxoEscuro,
@@ -1300,112 +1489,83 @@ class PaginaDetalhes extends StatelessWidget {
             ),
             // Permite rolar até o fim quando o texto da página é comprido.
             body: SingleChildScrollView(
-              // Organiza imagem, título, texto, destaques e botão em coluna.
+              padding: const EdgeInsets.fromLTRB(18, 20, 18, 30),
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
-                  // Painel roxo reúne o conteúdo principal da página.
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 15),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: roxoElixir,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: roxoEscuro.withValues(alpha: 0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                    // Alinha a imagem e os textos pela margem esquerda do painel.
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 720),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Mostra a imagem principal recebida pela página.
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            imagem,
-                            width: double.infinity,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Text(
-                          titulo,
-                          style: const TextStyle(
-                            fontFamily: 'Redact',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-                        // Mostra o texto recebido; os parágrafos vêm separados por linhas.
-                        Text(
-                          texto,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            height: 1.5,
-                            color: Colors.white,
-                          ),
-                        ),
-                        if (imagemComplementar != null) ...[
-                          const SizedBox(height: 22),
-                          Text(
-                            tituloImagemComplementar ?? 'Logo da Elixir',
-                            style: TextStyle(
-                              fontFamily: 'Redact',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
+                        if (mostrarImagemPrincipal)
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              color: Colors.white,
-                              width: double.infinity,
-                              height: 170,
-                              padding: const EdgeInsets.all(12),
-                              child: Image.asset(
-                                imagemComplementar!,
-                                fit: BoxFit.contain,
+                            borderRadius: BorderRadius.circular(18),
+                            child: SizedBox(
+                              height: 250,
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.asset(
+                                    imagem,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(color: roxoEscuro),
+                                  ),
+                                  const DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Color(0x10000000),
+                                          Color(0xD91B0D27),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 22,
+                                    right: 22,
+                                    bottom: 20,
+                                    child: Text(
+                                      titulo,
+                                      style: const TextStyle(
+                                        fontFamily: 'Redact',
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          if (descricaoComplementar != null) ...[
-                            const SizedBox(height: 12),
-                            Text(
-                              descricaoComplementar!,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                height: 1.5,
-                                color: Colors.white,
+                          )
+                        else
+                          Container(
+                            padding: const EdgeInsets.all(22),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [roxoEscuro, roxoElixir],
                               ),
+                              borderRadius: BorderRadius.circular(18),
                             ),
-                          ],
-                        ],
-                        const SizedBox(height: 22),
-                        // Cria uma linha com estrela para cada destaque, se houver algum.
-                        ...itens.map(
-                          (item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 14),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.star, color: Colors.amber),
-                                const SizedBox(width: 10),
+                                const Icon(
+                                  Icons.auto_stories_rounded,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                const SizedBox(width: 14),
                                 Expanded(
                                   child: Text(
-                                    item,
+                                    titulo,
                                     style: const TextStyle(
-                                      fontSize: 16,
-                                      height: 1.4,
+                                      fontFamily: 'Redact',
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -1413,26 +1573,167 @@ class PaginaDetalhes extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        // Volta para a página anterior quando o usuário toca no botão.
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () => Navigator.pop(context),
-                            icon: const Icon(Icons.arrow_back),
-                            label: const Text('Voltar para a página inicial'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: roxoBotao,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                        const SizedBox(height: 18),
+                        Container(
+                          padding: const EdgeInsets.all(22),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: roxoElixir.withValues(alpha: 0.08),
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: roxoEscuro.withValues(alpha: 0.06),
+                                blurRadius: 18,
+                                offset: const Offset(0, 7),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (paragrafos == null)
+                                Text(
+                                  texto,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    height: 1.65,
+                                    color: roxoEscuro.withValues(alpha: 0.86),
+                                  ),
+                                  textAlign: TextAlign.justify,
+                                )
+                              else
+                                for (
+                                  var indice = 0;
+                                  indice < paragrafos!.length;
+                                  indice++
+                                ) ...[
+                                  Text(
+                                    paragrafos![indice],
+                                    style: TextStyle(
+                                      fontFamily:
+                                          _ehTituloDeSecao(paragrafos![indice])
+                                          ? 'Redact'
+                                          : null,
+                                      fontSize:
+                                          _ehTituloDeSecao(paragrafos![indice])
+                                          ? 17
+                                          : 15,
+                                      fontWeight:
+                                          _ehTituloDeSecao(paragrafos![indice])
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      height: 1.65,
+                                      color: roxoEscuro.withValues(alpha: 0.86),
+                                    ),
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  for (final figura in figuras.where(
+                                    (figura) => figura.aposParagrafo == indice,
+                                  ))
+                                    _construirFigura(figura),
+                                  if (indice < paragrafos!.length - 1)
+                                    const SizedBox(height: 18),
+                                ],
+                              if (paragrafos == null)
+                                for (final figura in figuras)
+                                  _construirFigura(figura)
+                              else
+                                for (final figura in figuras.where(
+                                  (figura) => figura.aposParagrafo < 0,
+                                ))
+                                  _construirFigura(figura),
+                              if (imagemComplementar != null) ...[
+                                const SizedBox(height: 22),
+                                Text(
+                                  tituloImagemComplementar ?? 'Logo da Elixir',
+                                  style: TextStyle(
+                                    fontFamily: 'Redact',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: roxoEscuro,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    color: roxoEscuro,
+                                    width: double.infinity,
+                                    height: 170,
+                                    padding: const EdgeInsets.all(12),
+                                    child: Image.asset(
+                                      imagemComplementar!,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                                if (descricaoComplementar != null) ...[
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    descricaoComplementar!,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      height: 1.5,
+                                      color: roxoEscuro,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                              const SizedBox(height: 22),
+                              // Cria uma linha com estrela para cada destaque, se houver algum.
+                              ...itens.map(
+                                (item) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 14),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          item,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            height: 1.4,
+                                            color: roxoEscuro,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              // Volta para a página anterior quando o usuário toca no botão.
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: () => Navigator.pop(context),
+                                  icon: const Icon(Icons.arrow_back),
+                                  label: const Text(
+                                    'Voltar para a página inicial',
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: roxoElixir,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
                 ],
               ),
             ),

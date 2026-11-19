@@ -3,24 +3,77 @@
     "titulo": "História",
     "imagem": "img/logoelixir.png",
     "paragrafos": [
-      "A Elixir Corp. nasceu em 03 de maio de 2026, a partir de uma ideia que começou dentro da sala de aula da ETEC Prof. Basilides de Godoy. Foi durante o desenvolvimento de um projeto de TCC que Rihan de Jesus de Andrade e João Henrique Bonaldi se conheceram e deram início a esse projeto.",
-      "O desafio era criar uma empresa capaz de desenvolver e-commerces e transformá-los em Advertising Games, unindo tecnologia, criatividade e inovação para oferecer uma experiência diferente aos clientes.",
-      "Para tirar essa ideia do papel, foi preciso organizar equipes, dividir responsabilidades e trabalhar em conjunto para desenvolver tanto as lojas virtuais quanto os jogos. Cada etapa trouxe novos desafios, aprendizados e oportunidades de colocar nossos conhecimentos em prática.",
-      "Nosso primeiro projeto foi voltado ao aluguel de patinetes e bicicletas elétricas. A partir dele, desenvolvemos um e-commerce funcional e criamos o jogo \"Eucaliptos\", transformando a proposta inicial em um projeto completo.",
-      "No final, conseguimos muito mais do que concluir um trabalho acadêmico. Construímos algo que representava nosso esforço, nossas ideias e tudo o que aprendemos durante o processo. Foi assim que a Elixir Corp. ganhou vida: da união de dois grupos de pessoas com vontade de criar, aprender e transformar ideias em realidade."
-    ]
-  },
-  "mascote": {
-    "titulo": "Mascote",
-    "imagem": "img/mascote.png",
-    "imagemComplementar": "img/logoelixir.png",
-    "descricaoComplementar": "A logo da Elixir combina tons de roxo e formas marcantes para representar criatividade, tecnologia e inovação. Este texto é provisório e pode ser substituído pela explicação oficial.",
-    "paragrafos": [
-      "1. EXPLICAÇÃO DO MASCOTE",
-      "O Slopinho é o, mascote oficial do departamento Elixir, responsável pelo desenvolvimento de soluções de gamificação para empresas contratantes. Seu visual apresenta um personagem de aparência geométrica e estilizada, com predominância de tons de roxo e contornos pretos, transmitindo uma identidade visual descontraída, moderna e amigável.",
-      "Seu principal diferencial está na representação de duas expressões distintas: um lado bravo e outro feliz. Essa característica representa a filosofia da Elixir: \"Melhoramos tudo o que tocamos\". A expressão brava simboliza a insatisfação com aquilo que pode ser melhorado, enquanto a expressão feliz representa a transformação positiva alcançada após a intervenção da empresa. Dessa forma, o mascote demonstra visualmente a ideia de que todo processo pode evoluir e se tornar melhor.",
-      "A escolha das tonalidades de roxo busca representar criatividade, inovação e imaginação, características fundamentais para o desenvolvimento de experiências gamificadas. Seu formato simples e expressivo também contribui para criar uma figura de fácil identificação, aproximando a Elixir de seus clientes e tornando a comunicação do departamento mais descontraída.",
-      "O Slopinho representa a essência da Elixir: transformar atividades e processos tradicionais em experiências mais interativas, divertidas e envolventes por meio da gamificação. Assim como sua aparência combina duas expressões diferentes, o departamento busca transformar realidades, identificando oportunidades de melhoria e desenvolvendo soluções criativas e personalizadas para cada empresa contratante."
+      "2.1. HISTÓRIA DA EMPRESA",
+      "A Elixir surgiu com o propósito de modernizar pequenos e médios comércios, levando seus negócios para o ambiente digital. Fundada por estudantes dos cursos de Desenvolvimento de Sistemas e Jogos Digitais, a empresa combina tecnologia e criatividade para desenvolver e-commerces, sistemas web personalizados e soluções de gamificação.",
+      "Seus projetos auxiliam empresas na organização de cadastros, no controle de vendas e na otimização de processos internos, além de proporcionar experiências mais interativas e envolventes aos seus clientes.",
+      "O nome Elixir faz referência à poção mágica da mitologia, conhecida por transformar aqueles que a utilizavam. Essa ideia representa a missão da empresa: transformar negócios tradicionais em empreendimentos digitais, oferecendo soluções tecnológicas capazes de melhorar sua gestão e ampliar suas oportunidades de crescimento.",
+      "Seu slogan, “Tecnologia que engaja, sistemas que transformam”, resume a proposta de unir inovação, funcionalidade e interatividade em cada projeto desenvolvido.",
+      "A essência da Elixir é fundamentada em quatro pilares principais: Transformação, que consiste em levar o comércio tradicional ao ambiente digital, ampliando seu alcance e suas oportunidades de venda; Qualidade, que busca otimizar processos e garantir soluções eficientes, organizadas e padronizadas; Proximidade, que valoriza a compreensão das necessidades de cada cliente para desenvolver projetos personalizados; e Inovação, que utiliza metodologias ágeis e tecnologias atuais para promover melhorias constantes.",
+      "2.3. IDENTIDADE VISUAL",
+      "2.3.1. LOGOMARCA",
+      "A logomarca da Elixir foi desenvolvida para transmitir modernidade, personalidade e transformação. Ela é formada pelo nome ELIXIR em letras maiúsculas, com uma tipografia sem serifa, traços marcantes e espaçamento entre os caracteres, proporcionando uma aparência moderna e consistente.",
+      "Seu principal destaque está na letra “I”, posicionada no centro da composição e representada na cor roxa, simbolizando a gota do elixir. Esse elemento representa a transformação proporcionada pela empresa, reforçando visualmente o significado de seu nome.",
+      "A identidade possui duas versões principais: uma destinada à aplicação sobre fundos claros e outra sobre fundos roxo-escuros. Essa variação permite adaptar a marca a diferentes materiais e ambientes, preservando sua legibilidade e consistência visual.",
+      "A paleta de cores da Elixir tem o roxo como elemento principal, por representar criatividade, inovação e transformação. O roxo-escuro (#4C1D95) é utilizado em fundos e elementos de destaque, enquanto o lilás-claro (#EDE9FE) aparece em etiquetas e áreas de apoio. O preto suave (#18181B) é aplicado nos textos, e o branco (#FFFFFF) é utilizado nos fundos, proporcionando contraste, equilíbrio e uma aparência limpa e profissional.",
+      "2.3.2. MASCOTE",
+      "O Slopinho é o mascote oficial da Elixir e representa o lado criativo, moderno e descontraído da empresa. Com uma aparência geométrica e estilizada, predominância de tons de roxo e contornos pretos, o personagem foi desenvolvido para transmitir proximidade e personalidade à identidade da marca.",
+      "Seu principal diferencial está na presença de duas expressões distintas: uma face brava e outra feliz. Essa característica representa a filosofia da Elixir de melhorar tudo aquilo em que atua. A expressão brava simboliza a insatisfação com processos que apresentam oportunidades de melhoria, enquanto a expressão feliz representa a transformação positiva alcançada após a implementação das soluções desenvolvidas pela empresa.",
+      "As cores do Slopinho seguem a identidade visual da empresa, utilizando tonalidades que reforçam a criatividade e a inovação. O roxo-magenta (#BB5BC7), o lilás (#A874D9) e o roxo-sombra (#9067B5) compõem a aparência do personagem, transmitindo imaginação e modernidade. Já o preto (#000000) é utilizado nos contornos e nos olhos, garantindo contraste e definição aos elementos visuais.",
+      "Seu formato simples e expressivo facilita a identificação do personagem e contribui para aproximar a Elixir de seus clientes, tornando a comunicação da empresa mais leve e descontraída.",
+      "Dessa forma, o Slopinho representa a essência da Elixir: transformar atividades e processos tradicionais em experiências mais interativas, divertidas e eficientes por meio da tecnologia e da gamificação. Assim como suas duas expressões representam diferentes situações, a empresa busca identificar oportunidades de melhoria e desenvolver soluções criativas e personalizadas para cada cliente.",
+      "3. APRESENTAÇÃO DA EMPRESA CLIENTE – ECODRIVE",
+      "3.1. A EMPRESA E SEU RAMO DE ATIVIDADE",
+      "A EcoDrive é uma empresa do setor de mobilidade urbana sustentável que oferece serviços de aluguel de bicicletas convencionais e patinetes elétricos na cidade de São Paulo. Sua operação está concentrada em três bairros da zona oeste: Pinheiros, Itaim Bibi e Vila Madalena. Essas regiões foram escolhidas por apresentarem grande circulação de pessoas, concentração de escritórios, estações de metrô e diversos pontos culturais.",
+      "O serviço funciona por meio de um modelo de cobrança simples e acessível, com o valor de R$ 1,00 por minuto de utilização, tanto para bicicletas quanto para patinetes elétricos. Não existe uma taxa fixa de desbloqueio, e os pagamentos são realizados por meio de saldo pré-pago na conta do usuário.",
+      "A empresa está inserida em um mercado que vem apresentando crescimento na cidade de São Paulo. A micromobilidade compartilhada tem conquistado espaço como alternativa de transporte, acompanhando a busca por deslocamentos mais práticos e sustentáveis. Entre dezembro de 2024 e agosto de 2025, a quantidade de patinetes compartilhados na cidade passou de aproximadamente 2 mil para 7,1 mil unidades, representando um crescimento de 255% (DIÁRIO DO COMÉRCIO, 2025).",
+      "O retorno desse serviço foi autorizado pela Prefeitura de São Paulo em dezembro de 2024, estabelecendo regras de segurança e condições para a implantação de estações de compartilhamento (SÃO PAULO, 2024). Posteriormente, a atividade foi regulamentada pela Portaria Conjunta SMT/SMSUB/SEMTRA nº 001, de 4 de abril de 2025 (SÃO PAULO, 2025).",
+      "3.2. IDENTIDADE VISUAL",
+      "3.2.1. LOGOMARCA",
+      "A logomarca da EcoDrive foi desenvolvida para representar os conceitos de mobilidade, sustentabilidade e respeito ao meio ambiente. Sua composição apresenta um símbolo gráfico acompanhado pelo nome da marca, dividido em duas partes: ECO e DRIVE.",
+      "O símbolo representa uma pessoa pedalando uma bicicleta, com uma flor no lugar do rosto. A bicicleta simboliza mobilidade, movimento e praticidade, enquanto a flor representa a natureza, a sustentabilidade e o cuidado ambiental. Além disso, duas barras verticais separam o símbolo do nome da empresa, fazendo referência às faixas de uma ciclovia.",
+      "A logomarca possui três versões, todas na cor branca, aplicadas sobre fundos verde-escuro, verde-médio e verde-lima. Essa variedade permite diferentes aplicações, mantendo a identidade visual e garantindo boa legibilidade.",
+      "O nome EcoDrive foi escolhido por representar diretamente a proposta da empresa. O termo “Eco” está relacionado à ecologia, à sustentabilidade e à redução de poluentes, enquanto “Drive”, palavra de origem inglesa, está associado à condução e ao deslocamento. Juntos, os termos representam uma alternativa de transporte mais limpa, prática e acessível para a mobilidade urbana.",
+      "O slogan “Mova-se sem parar”, apresentado na página inicial do e-commerce, reforça a ideia de liberdade, movimento e praticidade, transmitindo a proposta de facilitar os deslocamentos pela cidade.",
+      "A identidade visual da EcoDrive foi construída a partir de diferentes tonalidades de verde, cor associada à natureza, à sustentabilidade e ao equilíbrio ambiental. O verde-escuro (#0F2419) é utilizado no cabeçalho e nas seções de destaque, transmitindo solidez e contraste. O verde-médio (#2F6119) aparece em uma das versões da logomarca, enquanto o verde-lima (#8DC63F) é aplicado principalmente em botões e chamadas para ação, representando energia e movimento.",
+      "Além dessas tonalidades, a paleta conta com o verde-claro (#DDE8D4) e o verde muito claro (#F3F6EF), utilizados nos fundos e nas áreas de apoio. Essas cores contribuem para uma composição visual leve, equilibrada e organizada, reforçando a proposta sustentável da EcoDrive e transmitindo uma imagem moderna e acessível."
+    ],
+    "figuras": [
+      {
+        "titulo": "Figura 1 – Todas as versões da logomarca da Elixir",
+        "imagem": "img/logoelixir.png",
+        "fonte": "Fonte: Elaborado pelos autores.",
+        "aposParagrafo": 10
+      },
+      {
+        "titulo": "Figura 2 – Paleta de cores da Elixir",
+        "imagem": "img/elixircores.png",
+        "fonte": "Fonte: Elaborado pelos autores.",
+        "aposParagrafo": 11
+      },
+      {
+        "titulo": "Figura 3 – Mascote da Elixir",
+        "imagem": "img/mascote.png",
+        "fonte": "Fonte: Elaborado pelos autores.",
+        "aposParagrafo": 14
+      },
+      {
+        "titulo": "Figura 4 – Paleta de cores do mascote da Elixir",
+        "imagem": "img/mascotecores.png",
+        "fonte": "Fonte: Elaborado pelos autores.",
+        "aposParagrafo": 15
+      },
+      {
+        "titulo": "Figura 10 – Todas as versões da logomarca da EcoDrive",
+        "imagem": "img/driverlogo.png",
+        "fonte": "Fonte: Elaborado pelos autores.",
+        "aposParagrafo": 28
+      },
+      {
+        "titulo": "Figura 11 – Paleta de cores da EcoDrive",
+        "imagem": "img/drivercores.png",
+        "fonte": "Fonte: Elaborado pelos autores.",
+        "aposParagrafo": 32
+      }
     ]
   },
   "projeto": {
