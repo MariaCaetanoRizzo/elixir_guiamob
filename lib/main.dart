@@ -337,12 +337,48 @@ class _MainAppState extends State<MainApp> {
               child: Stack(
                 alignment: Alignment.bottomLeft,
                 children: [
-                  Image.asset(
-                    imagem,
-                    width: double.infinity,
-                    height: 190,
-                    fit: BoxFit.cover,
-                  ),
+                  titulo == 'História'
+                      ? Container(
+                          width: double.infinity,
+                          height: 190,
+                          color: const Color(0xFFF7F5F9),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Image.asset(
+                                    'img/logoelixir.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 3,
+                                height: 150,
+                                color: roxoElixir,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Image.asset(
+                                    'img/driverlogo.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Image.asset(
+                          imagem,
+                          width: double.infinity,
+                          height: 190,
+                          fit: BoxFit.cover,
+                          alignment: imagem == 'img/grupoFormal.jpeg'
+                              ? Alignment.topCenter
+                              : Alignment.center,
+                        ),
                   Container(
                     height: 190,
                     decoration: const BoxDecoration(
@@ -743,7 +779,7 @@ class _MainAppState extends State<MainApp> {
                             child: _construirCardImagemSecao(
                               'Equipe',
                               'As pessoas por trás do projeto',
-                              'img/Captura de tela 2026-11-10 102409.png',
+                              'img/grupoFormal.jpeg',
                               Icons.handshake_rounded,
                               const EquipePage(),
                             ),
@@ -1158,11 +1194,11 @@ class ProjetoPage extends StatelessWidget {
           final projeto = snapshot.data!.projeto;
           return PaginaDetalhes(
             titulo: projeto.titulo,
-            imagem: 'img/Captura de tela 2026-10-30 095647.png',
+            imagem: projeto.imagem,
             texto: projeto.texto,
+            paragrafos: projeto.paragrafos,
             itens: projeto.itens,
-            imagemComplementar: 'img/sketch cidade.png',
-            tituloImagemComplementar: 'Mapa da cidade',
+            figuras: projeto.figuras,
           );
         }
 
@@ -1254,6 +1290,17 @@ class EquipePage extends StatelessWidget {
             body: ListView(
               padding: const EdgeInsets.fromLTRB(18, 20, 18, 28),
               children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    'img/grupoFormal.jpeg',
+                    width: double.infinity,
+                    height: 180,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                  ),
+                ),
+                const SizedBox(height: 18),
                 Container(
                   margin: const EdgeInsets.only(bottom: 18),
                   padding: const EdgeInsets.all(18),
