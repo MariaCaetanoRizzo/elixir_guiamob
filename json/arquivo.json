@@ -2,105 +2,120 @@
   {
     "id": 1,
     "nome": "Carlos Dias",
-    "descricao": "Protagonista de Eucaliptos, Carlos trabalha no jornal e recebe a oportunidade de cobrir um festival como fotógrafo. Apaixonado por fotografia desde os quinze anos, ele explora a cidade de bicicleta e, ao longo da semana, passa a considerar transformar esse interesse em profissão.",
+    "descricao": "Protagonista da história e fotógrafo que cobre o festival de Eucaliptos.",
+    "descricaoDetalhada": "Protagonista de Eucaliptos, Carlos trabalha no jornal e recebe a oportunidade de cobrir um festival como fotógrafo. Apaixonado por fotografia desde os quinze anos, ele explora a cidade de bicicleta e, ao longo da semana, passa a considerar transformar esse interesse em profissão.",
     "principal": true,
     "imagem": "img/personagens/carlos.jpeg"
   },
   {
     "id": 2,
     "nome": "Rita Santana",
-    "descricao": "Editora-chefe do jornal onde Carlos trabalha, Rita o convida para substituir o fotógrafo durante uma semana em Eucaliptos. Impressionada com as imagens que ele produz, ela também lhe apresenta a possibilidade de assumir uma vaga fixa como fotógrafo.",
+    "descricao": "Editora-chefe do jornal que convida Carlos para cobrir o festival.",
+    "descricaoDetalhada": "Editora-chefe do jornal onde Carlos trabalha, Rita o convida para substituir o fotógrafo durante uma semana em Eucaliptos. Impressionada com as imagens que ele produz, ela também lhe apresenta a possibilidade de assumir uma vaga fixa como fotógrafo.",
     "principal": true,
     "imagem": ""
   },
   {
     "id": 3,
     "nome": "Olga Pires",
-    "descricao": "Moradora de Eucaliptos, Olga é uma senhora simpática e conservadora que trabalha com sua pequena floricultura ambulante. Carlos a encontra na Praça Central enquanto conversa com os moradores sobre as histórias e as mudanças da cidade.",
+    "descricao": "Moradora da Praça Central e proprietária de uma floricultura ambulante.",
+    "descricaoDetalhada": "Moradora de Eucaliptos, Olga é uma senhora simpática e conservadora que trabalha com sua pequena floricultura ambulante. Carlos a encontra na Praça Central enquanto conversa com os moradores sobre as histórias e as mudanças da cidade.",
     "principal": false,
     "imagem": "img/personagens/olga.png"
   },
   {
     "id": 4,
     "nome": "Rafael Souza",
-    "descricao": "Jovem alternativo e rebelde ligado ao MURAL, Rafael é um dos moradores que Carlos conhece na Praça Central. Sua presença ajuda o fotógrafo a descobrir diferentes perspectivas sobre a cidade.",
+    "descricao": "Jovem ligado ao MURAL e conhecido por seu jeito alternativo e rebelde.",
+    "descricaoDetalhada": "Jovem alternativo e rebelde ligado ao MURAL, Rafael é um dos moradores que Carlos conhece na Praça Central. Sua presença ajuda o fotógrafo a descobrir diferentes perspectivas sobre a cidade.",
     "principal": false,
     "imagem": "img/personagens/rafael.png"
   },
   {
     "id": 5,
     "nome": "Neuza Oliveira",
-    "descricao": "Moradora ativa e bem-humorada de Eucaliptos, Neuza conversa com Carlos na Praça Central. Assim como os demais moradores que ele encontra, ela faz parte das histórias que revelam a vida e as transformações da cidade.",
+    "descricao": "Moradora ativa e bem-humorada que conversa com Carlos na Praça Central.",
+    "descricaoDetalhada": "Moradora ativa e bem-humorada de Eucaliptos, Neuza conversa com Carlos na Praça Central. Assim como os demais moradores que ele encontra, ela faz parte das histórias que revelam a vida e as transformações da cidade.",
     "principal": false,
     "imagem": "img/personagens/Neuza.png"
   },
   {
     "id": 6,
     "nome": "Fortunato Gomes",
-    "descricao": "Conhecido como o “doidinho do parque”, Fortunato é um senhor excêntrico que acredita ter encontrado um gnomo no bosque. A suposta criatura acaba sendo uma galinha com um colete refletivo, dando origem a um dos episódios mais divertidos da viagem de Carlos.",
+    "descricao": "Senhor excêntrico conhecido como o “doidinho do parque”.",
+    "descricaoDetalhada": "Conhecido como o “doidinho do parque”, Fortunato é um senhor excêntrico que acredita ter encontrado um gnomo no bosque. A suposta criatura acaba sendo uma galinha com um colete refletivo, dando origem a um dos episódios mais divertidos da viagem de Carlos.",
     "principal": false,
     "imagem": "img/personagens/fortunato.PNG"
   },
   {
     "id": 8,
     "nome": "Íris Junqueira",
-    "descricao": "Bióloga de Eucaliptos, Íris ajuda a esclarecer o boato sobre o gnomo avistado no bosque por Fortunato. Ela explica que a criatura misteriosa era, na verdade, uma galinha usando um colete refletivo.",
+    "descricao": "Bióloga que explica o mistério da suposta criatura do bosque.",
+    "descricaoDetalhada": "Bióloga de Eucaliptos, Íris ajuda a esclarecer o boato sobre o gnomo avistado no bosque por Fortunato. Ela explica que a criatura misteriosa era, na verdade, uma galinha usando um colete refletivo.",
     "principal": false,
     "imagem": "img/personagens/iris.png"
   },
   {
     "id": 9,
     "nome": "Léticia Magalhães",
-    "descricao": "Ativista ambiental e uma das lideranças da manifestação em Eucaliptos. Letícia participa do protesto contra o aumento da temperatura global e a poluição causada pelo excesso de automóveis, acompanhado por Carlos.",
+    "descricao": "Ativista ambiental que lidera o protesto contra a poluição.",
+    "descricaoDetalhada": "Ativista ambiental e uma das lideranças da manifestação em Eucaliptos. Letícia participa do protesto contra o aumento da temperatura global e a poluição causada pelo excesso de automóveis, acompanhado por Carlos.",
     "principal": false,
     "imagem": ""
   },
   {
     "id": 10,
     "nome": "Caio Duarte",
-    "descricao": "Ciclista ligado ao MURAL, Caio participa da organização da manifestação ambiental de Eucaliptos. Durante a cobertura, Carlos registra o movimento por uma cidade menos poluída.",
+    "descricao": "Ciclista do MURAL que ajuda a organizar a manifestação ambiental.",
+    "descricaoDetalhada": "Ciclista ligado ao MURAL, Caio participa da organização da manifestação ambiental de Eucaliptos. Durante a cobertura, Carlos registra o movimento por uma cidade menos poluída.",
     "principal": false,
     "imagem": ""
   },
   {
     "id": 11,
     "nome": "Clarice Duarte",
-    "descricao": "Artista muralista que trabalha em um grande projeto do MURAL. Carlos a conhece no espaço artístico da cidade, onde encontra artistas e obras que expressam a criatividade local.",
+    "descricao": "Artista muralista que trabalha em um grande projeto do MURAL.",
+    "descricaoDetalhada": "Artista muralista que trabalha em um grande projeto do MURAL. Carlos a conhece no espaço artístico da cidade, onde encontra artistas e obras que expressam a criatividade local.",
     "principal": false,
     "imagem": "img/personagens/clarice.PNG"
   },
   {
     "id": 12,
     "nome": "Enzo Ferreira",
-    "descricao": "Artista observacional ligado ao MURAL, Enzo está entre as pessoas que Carlos conhece no mural artístico de Eucaliptos, um espaço dedicado à criatividade e à expressão cultural.",
+    "descricao": "Artista observacional ligado ao espaço cultural do MURAL.",
+    "descricaoDetalhada": "Artista observacional ligado ao MURAL, Enzo está entre as pessoas que Carlos conhece no mural artístico de Eucaliptos, um espaço dedicado à criatividade e à expressão cultural.",
     "principal": false,
     "imagem": ""
   },
   {
     "id": 13,
     "nome": "Silvia Toledo",
-    "descricao": "Fotógrafa e integrante do MURAL, Silvia observa as imagens de Carlos e reconhece seu talento. Seu comentário faz com que ele reflita sobre a possibilidade de seguir profissionalmente na fotografia.",
+    "descricao": "Fotógrafa do MURAL que reconhece o talento de Carlos.",
+    "descricaoDetalhada": "Fotógrafa e integrante do MURAL, Silvia observa as imagens de Carlos e reconhece seu talento. Seu comentário faz com que ele reflita sobre a possibilidade de seguir profissionalmente na fotografia.",
     "principal": false,
     "imagem": ""
   },
   {
     "id": 14,
     "nome": "João",
-    "descricao": "Jovem e grande fã da cantora CHARLOTT3. Durante o festival de Eucaliptos, João ajuda Carlos a chegar à área reservada à imprensa para fotografar a apresentação.",
+    "descricao": "Fã da CHARLOTT3 que ajuda Carlos a chegar à área da imprensa.",
+    "descricaoDetalhada": "Jovem e grande fã da cantora CHARLOTT3. Durante o festival de Eucaliptos, João ajuda Carlos a chegar à área reservada à imprensa para fotografar a apresentação.",
     "principal": false,
     "imagem": ""
   },
   {
     "id": 15,
     "nome": "Michel Neves",
-    "descricao": "Segurança responsável pelo controle de acesso à área reservada à imprensa durante o show de CHARLOTT3 no festival de Eucaliptos.",
+    "descricao": "Segurança da área reservada à imprensa no festival.",
+    "descricaoDetalhada": "Segurança responsável pelo controle de acesso à área reservada à imprensa durante o show de CHARLOTT3 no festival de Eucaliptos.",
     "principal": false,
     "imagem": "img/personagens/michael.PNG"
   },
   {
     "id": 16,
     "nome": "CHARLOTT3",
-    "descricao": "Cantora idol que se apresenta no festival de Eucaliptos. Seu show é a última pauta de Carlos na cidade e reúne visitantes em uma celebração pelas ruas.",
+    "descricao": "Cantora idol que encerra o festival de Eucaliptos.",
+    "descricaoDetalhada": "Cantora idol que se apresenta no festival de Eucaliptos. Seu show é a última pauta de Carlos na cidade e reúne visitantes em uma celebração pelas ruas.",
     "principal": false,
     "imagem": "img/personagens/charlotte.png.jpeg"
   }

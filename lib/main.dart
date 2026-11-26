@@ -10,6 +10,7 @@ class Personagem {
     required this.id,
     required this.nome,
     required this.descricao,
+    required this.descricaoDetalhada,
     required this.principal,
     required this.imagem,
   });
@@ -17,6 +18,7 @@ class Personagem {
   final int id; // Número que diferencia este personagem dos demais.
   final String nome; // Nome mostrado no carrossel e na lista do elenco.
   final String descricao; // Texto que explica quem é o personagem.
+  final String descricaoDetalhada; // Texto completo exibido em "Saber mais".
   final bool principal; // Informa se ele faz parte do grupo principal.
   final String imagem; // Caminho de uma imagem do app ou endereço da internet.
 
@@ -26,6 +28,8 @@ class Personagem {
       id: json['id'] as int,
       nome: json['nome'] as String,
       descricao: json['descricao'] as String,
+      descricaoDetalhada:
+          json['descricaoDetalhada'] as String? ?? json['descricao'] as String,
       principal: json['principal'] as bool,
       imagem: json['imagem'] as String? ?? '',
     );
@@ -484,6 +488,23 @@ class _MainAppState extends State<MainApp> {
                                 color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 6),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 28,
+                              ),
+                              child: Text(
+                                personagem.descricao,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  height: 1.35,
+                                  color: Colors.white70,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         );
@@ -1117,13 +1138,15 @@ class _PersonagensPageState extends State<PersonagensPage> {
                                   color: roxoEscuro,
                                 ),
                               ),
-                              subtitle: const Text('Ficha e modelo 3D'),
+                              subtitle: const Text(
+                                'Descrição completa e modelo 3D',
+                              ),
                               children: [
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      personagem.descricao,
+                                      personagem.descricaoDetalhada,
                                       style: TextStyle(
                                         fontSize: 14,
                                         height: 1.5,
