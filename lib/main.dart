@@ -54,6 +54,40 @@ Future<List<Personagem>> carregarPersonagens() {
       });
 }
 
+const Map<int, String> _spritesPersonagens = {
+  1: 'img/personagens/carlos.jpeg',
+  3: 'img/personagens/olga.png',
+  4: 'img/personagens/rafael.png',
+  5: 'img/personagens/Neuza.png',
+  6: 'img/personagens/fortunato.PNG',
+  8: 'img/personagens/iris.png',
+  10: 'img/personagens/caio.PNG',
+  11: 'img/personagens/clarice.PNG',
+  15: 'img/personagens/michael.PNG',
+  16: 'img/personagens/charlotte.png.jpeg',
+};
+
+const Map<int, String> _rendersPersonagens = {
+  1: 'img/rendersEucaliptos/CarlosRender.png',
+  2: 'img/rendersEucaliptos/RitaRender.png',
+  6: 'img/rendersEucaliptos/FortunadoRender.png',
+  8: 'img/rendersEucaliptos/IrisRender.png',
+  9: 'img/rendersEucaliptos/LeticiaRender.png',
+  10: 'img/rendersEucaliptos/CaioRender.png',
+  11: 'img/rendersEucaliptos/ClariceRender.png',
+  12: 'img/rendersEucaliptos/EnzoRender.png',
+  13: 'img/rendersEucaliptos/SilviaRender.png',
+  16: 'img/rendersEucaliptos/CharlotteRender.png',
+};
+
+String imagemSpritePersonagem(Personagem personagem) =>
+    _spritesPersonagens[personagem.id] ??
+    _rendersPersonagens[personagem.id] ??
+    personagem.imagem;
+
+String imagemRenderPersonagem(Personagem personagem) =>
+    _rendersPersonagens[personagem.id] ?? personagem.imagem;
+
 /// Reúne os textos e a imagem que uma página precisa para ser montada.
 class ConteudoPagina {
   const ConteudoPagina({
@@ -476,7 +510,9 @@ class _MainAppState extends State<MainApp> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             // Mostra a foto ou a imagem padrão se a foto não abrir.
-                            construirCardImagem(personagem.imagem),
+                            construirCardImagem(
+                              imagemSpritePersonagem(personagem),
+                            ),
                             const SizedBox(height: 12),
                             // Mostra o nome do personagem selecionado.
                             Text(
@@ -1079,7 +1115,7 @@ class _PersonagensPageState extends State<PersonagensPage> {
                                     width: 92,
                                     height: 104,
                                     child: construirCardImagem(
-                                      personagem.imagem,
+                                      imagemSpritePersonagem(personagem),
                                       width: 92,
                                       height: 104,
                                       fit: BoxFit.cover,
@@ -1139,7 +1175,7 @@ class _PersonagensPageState extends State<PersonagensPage> {
                                 ),
                               ),
                               subtitle: const Text(
-                                'Descrição completa e modelo 3D',
+                                'Descrição completa e imagem do personagem',
                               ),
                               children: [
                                 Column(
@@ -1156,32 +1192,12 @@ class _PersonagensPageState extends State<PersonagensPage> {
                                       ),
                                     ),
                                     const SizedBox(height: 12),
-                                    Container(
-                                      width: double.infinity,
-                                      height: 210,
-                                      decoration: BoxDecoration(
-                                        color: roxoEscuro,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                            Icons.view_in_ar_rounded,
-                                            size: 42,
-                                            color: Colors.white70,
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            'Modelo 3D de ${personagem.nome}',
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: construirCardImagem(
+                                        imagemRenderPersonagem(personagem),
+                                        height: 210,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ],

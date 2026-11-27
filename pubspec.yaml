@@ -20,6 +20,7 @@ flutter:
   assets:
     - img/
     - img/personagens/
+    - img/rendersEucaliptos/
     - json/
   fonts:
     - family: MomoTrust
