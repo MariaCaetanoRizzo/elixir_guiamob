@@ -64,7 +64,7 @@ const Map<int, String> _spritesPersonagens = {
   10: 'img/personagens/caio.PNG',
   11: 'img/personagens/clarice.PNG',
   15: 'img/personagens/michael.PNG',
-  16: 'img/personagens/charlotte.png.jpeg',
+  16: 'img/personagens/CharlotteN.PNG',
 };
 
 const Map<int, String> _rendersPersonagens = {
