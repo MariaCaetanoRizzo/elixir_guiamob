@@ -48,6 +48,14 @@
     "imagem": "img/rendersEucaliptos/FortunadoRender.png"
   },
   {
+    "id": 7,
+    "nome": "Pedro Parker",
+    "descricao": "Fotógrafo do jornal responsável pela cobertura do festival de Eucaliptos.",
+    "descricaoDetalhada": "Pedro Parker é o fotógrafo responsável por cobrir o festival de Eucaliptos. Depois de sofrer um acidente e ficar impossibilitado de realizar o trabalho, ele é substituído por Carlos, que recebe a oportunidade de assumir a cobertura durante uma semana.",
+    "principal": false,
+    "imagem": "img/personagens/Pedro.PNG"
+  },
+  {
     "id": 8,
     "nome": "Íris Junqueira",
     "descricao": "Bióloga que explica o mistério da suposta criatura do bosque.",
@@ -61,7 +69,7 @@
     "descricao": "Ativista ambiental que lidera o protesto contra a poluição.",
     "descricaoDetalhada": "Ativista ambiental e uma das lideranças da manifestação em Eucaliptos. Letícia participa do protesto contra o aumento da temperatura global e a poluição causada pelo excesso de automóveis, acompanhado por Carlos.",
     "principal": false,
-    "imagem": "img/rendersEucaliptos/LeticiaRender.png"
+    "imagem": "img/personagens/letycya.PNG"
   },
   {
     "id": 10,
