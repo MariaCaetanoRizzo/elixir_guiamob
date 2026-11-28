@@ -56,6 +56,7 @@ Future<List<Personagem>> carregarPersonagens() {
 
 const Map<int, String> _spritesPersonagens = {
   1: 'img/personagens/carlos.jpeg',
+  2: 'img/personagens/ryta.jpeg',
   3: 'img/personagens/olga.png',
   4: 'img/personagens/rafael.png',
   5: 'img/personagens/Neuza.png',
@@ -63,6 +64,8 @@ const Map<int, String> _spritesPersonagens = {
   8: 'img/personagens/iris.png',
   10: 'img/personagens/caio.PNG',
   11: 'img/personagens/clarice.PNG',
+  12: 'img/personagens/Enzo.PNG',
+  13: 'img/personagens/slvya.PNG',
   15: 'img/personagens/michael.PNG',
   16: 'img/personagens/CharlotteN.PNG',
 };

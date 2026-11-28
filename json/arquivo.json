@@ -89,19 +89,11 @@
   },
   {
     "id": 13,
-    "nome": "Silvia Toledo",
+    "nome": "Sylvya Toledo",
     "descricao": "Fotógrafa do MURAL que reconhece o talento de Carlos.",
-    "descricaoDetalhada": "Fotógrafa e integrante do MURAL, Silvia observa as imagens de Carlos e reconhece seu talento. Seu comentário faz com que ele reflita sobre a possibilidade de seguir profissionalmente na fotografia.",
+    "descricaoDetalhada": "Fotógrafa e integrante do MURAL, Sylvya observa as imagens de Carlos e reconhece seu talento. Seu comentário faz com que ele reflita sobre a possibilidade de seguir profissionalmente na fotografia.",
     "principal": false,
     "imagem": "img/rendersEucaliptos/SilviaRender.png"
-  },
-  {
-    "id": 14,
-    "nome": "João",
-    "descricao": "Fã da CHARLOTT3 que ajuda Carlos a chegar à área da imprensa.",
-    "descricaoDetalhada": "Jovem e grande fã da cantora CHARLOTT3. Durante o festival de Eucaliptos, João ajuda Carlos a chegar à área reservada à imprensa para fotografar a apresentação.",
-    "principal": false,
-    "imagem": ""
   },
   {
     "id": 15,
